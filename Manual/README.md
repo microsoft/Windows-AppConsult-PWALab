@@ -23,9 +23,9 @@
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add a manifest to the website, which is a JSON file that describes it. Thanks to the manifest, you will be able to directly “install” the website from the browser and use it on your phone or PC like if it’s a native application.
-2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the Service Worker you’ll be able to implement different caching techniques, which will allow the website to be partially used also when you’re offline.
-3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
+1. In the first exercise you will add a manifest to the website, which is a JSON file that describes it. Thanks to the manifest, the browser will treat it like if it's a regular native application. You'll be able, for example, to install and use it even without opening the browser.
+2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the Service Worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
+3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will to receive notifications from a backend even when the browser is closed.
 
 ### Computers in this lab
 This lab uses a single Virtual Machine to provide you with the development environment. The VM settings are reported in the table below. Before you begin the lab, please make sure the VM is started and you are logged on to using the credentials provided below. 
@@ -38,13 +38,13 @@ The virtual machine is based on Windows 10 October Update (1809) and it includes
 - Visual Studio Code
 - Google Chrome
 
-If you already have these tools on your computer, feel free to directly use it for the lab instead of the virtual machine.
+If you already have these tools on your computer, feel free to directly use it for the lab instead of the virtual machine. Visual Studio and Visual STudio Code are mutually exclusive. During the lab we're going to use Visual Studio Code, but the same tasks can be achieved also with Visual Studio if you prefer.
 
 ### Scenario
-Contoso Dashboard is a web application used by internal support team to keep track of all the activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
-The website is satisfying all the requirements of a modern websites: it's based on HTML5, JavaScript and CSS and it leverages an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine or a mobile phone.
+Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all the activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
+The website is satisfying all the requirements of a modern websites: it's based on HTML5, JavaScript and CSS and it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine or a mobile phone.
 
-The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide some offline capabilities, so that the critical information provided by the dashboard can be accessed even when the Internet connection is missing.
+The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide  offline capabilities, so that the critical information provided by the dashboard can be accessed even when the Internet connection is missing.
 
 ### The project
 The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs client side and it's based only on HTML, CSS and JavaScript.
@@ -53,14 +53,14 @@ The information displayed in the dashboard are taken from a set of REST services
 ### Key concepts that will be used during the lab
 
 #### Service Workers
-In the typical web workflow, when you visit a website there's a direct connection between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
+In the typical web workflow, when you visit a website there's a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
 
-Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the strategy we want to implement as developers. It could forward the request directly to the server and then cache it; it could send the request to the cache and, only if it isn't found, forward it to the server. During this lab we'll explore different caching techniques that can be implemented with a service worker.
+Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the caching strategy we want to implement. We can forward the request directly to the server and then cache it; we can send the request to the cache and, only if it's missing, forward it to the server. During this lab we'll explore different caching techniques that can be implemented with a service worker.
 
-Another important feature is that service workers can run in the background, even when the browser is not opened. As a consequence, service workers are leveraged also to support push notifications. This way, a Progressive Web App or a website can receive notifications even when the user isn't browsing the website or he's using another application.
+Another important feature is that service workers can run in the background, even when the browser is not running. As a consequence, service workers are leveraged also to support push notifications. This way, a Progressive Web App or a website can receive notifications even when the user isn't browsing the website or while he's using another application.
 
 #### Promises
-Promises are a modern way to handle with asynchronous operations in JavaScript. In the past, this scenario has typically been implemented with callbacks. You define one or more functions and then you assign them to handle different events. For example, this how you implement a HTTP request using the **XMLHttpRequest** API, which is based on the callback approach:
+Promises are a modern way to handle asynchronous operations in JavaScript. In the past, this scenario has typically been implemented with callbacks. You define one or more functions and then you assign them to handle different events. For example, this how you implement a HTTP request using the **XMLHttpRequest** API, which is based on the callback approach:
 
 ```javascript
 function success() {
@@ -79,7 +79,7 @@ request.open('get', './api/data.json', true);
 request.send();
 ```
 
-The API exposes two events, **onload** (which is invoked when the operation has been completed with success) and **onerror** (which is invoked when the connection has failed). The first one is associated to a function called **success()**, which takes the response and parses it; the second one, instead, triggers a function called **error** which logs the exception in the console.
+The API exposes two events, **onload** (which is invoked when the operation has been completed with success) and **onerror** (which is invoked when the operation has failed). The first one is associated to a function called **success()**, which takes the response and parses it; the second one, instead, triggers a function called **error** which logs the exception in the console.
 
 This approach has multiple downsides, like:
 
@@ -87,7 +87,7 @@ This approach has multiple downsides, like:
 - It's hard to combine multiple asynchronous events together
 - Callbacks may be called before the completion of the current JavaScript run loop
 
-A **Promise** is an object representing the eventual completion or failure of an asynchronous operation. This is, for example, how the previous sample could be written using the Fetch API, which is based on the Promises approach:
+A **Promise** is an object representing the completion or failure of an asynchronous operation. This is, for example, how the previous sample can be written using the Fetch APIs, which are based on the Promise approach:
 
 ```javascript
 fetch('./api/data.json')
@@ -104,40 +104,40 @@ fetch('./api/data.json')
   });
 ```
 
-The actions that must be executed only when the operation is completed are specified using the **then()** constructor. The error, instead, can be easily intercepted by chaining a **catch()** statement.
-Since the **then()** method returns another Promise, it's easy to chain multiple asynchronous events together. For example, in the previous sample you can notice how, if the network operation has completed successfully, we call another asynchronous method, **json()**, which parses the response as a JSON document. 
+The actions that must be executed only when the operation is completed are specified inside the **then()** method. The error, instead, can be easily intercepted by chaining a **catch()** statement.
+Since the **then()** method returns another promise, it's easy to chain multiple asynchronous events together. For example, in the previous sample you can notice how, if the network operation has completed successfully, we call another asynchronous method, **json()**, which parses the response as a JSON document. 
 
-We're going to heavily use Promises during the lab, since all the APIs exposed by the service worker are based on this approach.
+We're going to heavily use promises during the lab, since all the APIs exposed by the service worker are based on this approach.
 
 #### Fetch APIs
 We have already seen this API in action talking about Promises. Fetch is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
 
-The service worker is able to intercept all the fetch operations happening inside the page. This is a key requirement to implement offline scenarios, since it will allow us to intercept all the network operations and cache them, based on the technique we have decided to adopt.
+The service worker is able to intercept all the fetch operations performed by the website, either explicit (for example, you invoke the fetch() method to communicate with a web service) or implicit (the browser downloads a set of HTML, JavaScript and CSS resources when the website is loaded). This is a key requirement to implement offline scenarios, since it will allow us to intercept all the network operations and cache them, based on the technique we have decided to adopt.
 
 #### Cache APIs
 The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specifically Request / Responses object pairs. This is how caching implemented using these APIs looks like:
 
 ![](CachingPreview.png)
 
-For each request, the Cache interface stores all the information about the HTTP request. The key identifier is the path of the resource, while the associated value is the full HTTP request, including the content.
+For each request, the Cache interface stores all the information about the HTTP request. The key identifier is the path of the resource, while the associated value is the full HTTP response, including the content.
 This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, etc.
 
-We're going to leverage the cache APIs in the service worker, in combination with the Fetch APIs. If the Fetch operation fails, we're going to return the response from the cache instead from the server. However, cache APIs can be leveraged also from web pages if you need to implement more complex scenarios. For example, to make the website more responsive, you could immediately load some data from the Cache directly inside the page and, only later, update it with the response coming from the network.
+We're going to leverage the cache APIs in the service worker, in combination with the fetch ones. If the fetch operation fails, we're going to return the response from the cache instead from the server. However, cache APIs can be leveraged also from web pages if you need to implement more complex scenarios. For example, to make the website more responsive, you could immediately load some data from the cache directly inside the page and, only later, update it with the response coming from the network.
 
 ### The tools
-For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and add the require code to implement the various features which will turn your website into a Progressive Web App.
+For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the require code to implement the various features which will turn your website into a Progressive Web App. If you prefer, you can use also Visual Studio 2017.
 
 Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quicly spin a web server to host web applications. Thanks to this extension, we'll be able to quickly test the changes we're going to make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
-Using this extension is very easy. Just open in Visual Studio Folder which contains the website and press the **Go Live** button highlighted in the image below:
+Using this extension is very easy. Just open in Visual Studio Code the which contains the website and press the **Go Live** button highlighted in the image below:
 
 ![](golive.png)
 
 Lastly, we're going to use Google Chrome as a web browser for testing. The included developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
 ## Exercise 2 - Adding offline capabilities
-One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that at least some portions of it could be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
+One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
 
-The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
+The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we phisically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
 
 1.	Open Visual Studio Code and choose Open folder.
 2.	Select the folder *add the path of the folder*, which contains the final output of Exercise 1
@@ -169,7 +169,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
       });
     ```
     
-    We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation, so that we can handle it instead of the browser. However, in this case we are going to behave exactly like the browser, so we simply invoke the **fetch** API passing, as parameter, the original request. This way, it will be forwarded to the server.
+    We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation. This way, the browser won't try to handle it, but it will be up to us to do it. However, in this case we are behaving like the browser, so we simply invoke the **fetch()** method passing, as parameter, the original request. This way, it will simply be forwarded to the server.
 
 4.	Now expand the **js** folder in the Explorer panel and press again the **New file** button. Name it **sb-pwa.js**. This is the file where we're going to implement all the logic to register the service worker.
 5.	Copy and paste the following code snippet:
@@ -187,10 +187,10 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
     }
     ```
 
-    This code first checks if a Service Worker is already registered, by checking if the **navigator.serviceWorker.controller** exists. If that’s the case, we don’t have to do anything. Otherwise, we move on with the registration process by calling the **navigator.serviceWorker.register()** method, which requires two parameters:
+    This code first checks if a Service Worker is already registered, by checking if **navigator.serviceWorker.controller** exists. If that’s the case, we don’t have to do anything. Otherwise, we move on with the registration process by calling the **navigator.serviceWorker.register()** method, which requires two parameters:
     - The filename of the JavaScript file which will act as a service worker. The path should be relative to the root of the website. We specify the name of the file we have previously created, which is **sw.js**.
     - A set of additional parameters for the configuration. The key one is called **scope**, which specifies the resources the service worker will be able to access to. Since we want to handle the whole website, we have placed the sw.js file in the root and we specify **./** as scope. 
-    The **register()** method is asynchronous and it’s based on the Promises approach. As such, we can use the **then()** function to chain another operation which must be executed once the operation has been completed. In our case, we just log a message in the browser’s console.
+    The **register()** method is asynchronous and it’s based on the promises approach. As such, we can use the **then()** function to chain another operation which must be executed once the operation has been completed. In our case, we just log a message in the browser’s console.
 
 That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5050** in Chrome and press F12 to enable the developer tools. Move to the **Application** tab and you should see something like this:
 
@@ -234,7 +234,7 @@ Here is the list with, highlighted in bold, the pages which should be cached whe
 - register.html
 - **tables.html**
 
-These are the pages that contains information which should be available to the user regarldess of the status of his Internet connection. All the others aren’t a good candidate since they are dedicated to performing actions (logging in, registering a new account, etc.) which would be impossible to complete anyway offline.
+These are the pages that contains information which are relevant also in an offline scenario. All the others aren’t a good candidate since they are dedicated to perform actions (logging in, registering a new account, etc.) which would be impossible to complete anyway without an Internet connection.
 
 Let’s define a new function to cache these pages inside the service worker:
 
@@ -258,7 +258,7 @@ Let’s define a new function to cache these pages inside the service worker:
     }
     ```
     
-    This code uses the Cache APIs to open the cache we have created for our application, by using the **open()** method exposed by the caches object. The name of the cache doesn’t have to follow a specific naming convention, you can use the one you prefer. In our case, we're using **pwabuilder-offline**. This method will created the cache if it doesn't exist, so it's safe to call it even if it's the first time the web application is opened. When the open operation is completed with success, we can move on and store some pages using the **addAll()** method, passing as parameter an array of strings with the list of pages we want to include in the cache.
+    This code uses the cache APIs to open the cache we have created for our application, by using the **open()** method exposed by the caches object. The name of the cache doesn’t have to follow a specific naming convention, you can use the one you prefer. In our case, we're using **pwabuilder-offline**. This method will create the cache if it doesn't exist, so it's safe to call it even if it's the first time the web application is opened. When the operation is completed with success, we can move on and store some pages using the **addAll()** method, passing as parameter an array of strings with the list of pages we want to include in the cache.
     
 3.	The next step is to invoke the above function as soon as the service worker is installed. We can use one of the events exposed by the service worker, called install. Copy and paste the follow snippet before the **preLoad()** function:
 
@@ -268,20 +268,20 @@ Let’s define a new function to cache these pages inside the service worker:
       });
     ```
     
-    The **waitUntil()** method exposed by the event API is used to tell to the browser that work is ongoing until the promise settles, and it shouldn't terminate the service worker if it wants that work to complete. This way the **preLoad()** function will be invoked as soon as the service worker is deployed and the caching operation won’t be aborted as long as it’s still running.
+    The **waitUntil()** method exposed by the event APIs is used to tell to the browser that work is ongoing until the promise settles, and it shouldn't terminate the service worker if it wants that work to complete. This way the **preLoad()** function will be invoked as soon as the service worker is deployed and the caching operation won’t be aborted as long as it’s still running.
 
 4.	Now return to Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 5.	Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-6.  Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
+6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
-8.	Expand the **Cache** section: you should see a cache with the same name you have used in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
+8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
 9.	Notice how, despite you have visited only the main page of the websites, also other pages have been cached:
 
     ![](cacheall.png)
     
     These are the pages that we have manually added to the cache when the service worker has been installed.
 
-However, the code we have written so far isn't enough. If we move to the **Network** tab, we check **Offline** and we reload the website we will see the same offline browser error.
+However, the code we have written so far isn't enough. If we move to the **Network** tab, we enable the **Offline** option and we reload the website we will see the same offline browser error.
 
 > Can you guess why is it happening?
 
@@ -300,7 +300,7 @@ We need to change the current handler of the **fetch** event in a way that, if t
         .catch(function (error) {
           return caches.open('pwabuilder-offline').then(function (cache) {
             return cache.match(event.request).then(function (matching) {
-              var report =  !matching || matching.status == 404 ? cache.match('404.html'): matching;
+              var report =  !matching || matching.status == 404 ? cache.match('offline.html'): matching;
               return report;
             });
           });
@@ -338,7 +338,7 @@ A way to solve this problem would be update the Service Worker initialization co
 ### Task 3 - Enable cache at request time
 In the previous task we have intercepted the **fetch** event to handle caching. However, we were focused only in reading from the cache. If the current request couldn't be satisfied because Internet connection was missing, we tried to read it from the cache.
 
-However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save it in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the others that are performed while the user browses the web application.
+However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the others that are resources that are downloaded while the user browses the web application.
 
 1. Open the **sw.js** file in Visual Studio Code
 2. Look for the function which handles the **fetch** event we have created in task 2 and delete it.
