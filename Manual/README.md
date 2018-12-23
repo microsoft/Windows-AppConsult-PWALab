@@ -367,7 +367,7 @@ However, this event can be used also to write to the cache. This is what we're g
           //If not in the cache, then return error page
           return caches.open('pwabuilder-offline').then(function (cache) {
             return cache.match(event.request).then(function (matching) {
-              var report =  !matching || matching.status == 404 ? cache.match('404.html'): matching;
+              var report =  !matching || matching.status == 404 ? cache.match('offline.html'): matching;
               return report;
             });
           });
@@ -397,6 +397,99 @@ Let's see the new behavior.
 8. Stay in the **Applications** tab of the developer tools and choose, this time, **Service Worker**.
 9. Check **Offline** at the top of the panel.
 10. Now reload the page. You will notice that, this time, the offline page will look exactly like the online one, without errors or noticeable issues. The reason is that, this time, also all the required CSS and JavaScript files have been cached and not just the HTML ones.
+
+### Task 4 - Cache specific requests (optional tasks)
+
+Caching doesn't work only with standard web resources like HTML pages or CSS files, but with any HTTP request, including the output of REST services.
+We can see an example in the Contoso Dashboard application. The main page includes 4 boxes, which display in real time the status of various activities happening inside the company.
+
+![](dashboard.png)
+
+The information displayed in these boxes is retrieved from a REST service exposed on Internet.
+
+
+1) Open the **sb-admin.js** file, placed inside the **js** folder of the project. 2) Look for the a snippet of code below, which is used to update the messages box (the blue one):
+
+    ```javascript
+    $(document).ready(function() {
+    
+        var baseUrl = 'https://ready2019-pwa.azurewebsites.net';
+    
+        fetch(baseUrl + '/api/messages')
+        .then(json)
+        .then(function (data) {
+          $('#messages').html(data.count + " New Messages!");
+        });
+    }
+    
+    function json(response) {
+    return response.json();
+    }
+    
+    ```
+
+    By using the **fetch()** method we connect to the REST service, we download its content, we parse it as a JSON and we extract the total number of messages (which is included in the **count** property). By using the jQuery syntax, we update HTML code of the box with id **messages** to display the returned value.
+3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
+4. Press F12 to turn the developer tools and move to the **Application** tab.
+5. Expand the **Cache Storage** section in the left panel and click on the available cache, which name is **pwabuilder-offline**.
+6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
+7. Click on the **/api/messages** cached resource and notice how it contains the JSON downloaded from the REST service.
+
+![](messagesjson.png)
+
+8. You can test that the request is being succesfully cached by observing the different behavior when you're online or offline:
+- If you're online, every time you refresh the page the number in the various boxes will change, since it's returned by the REST API
+- If you're offline, at every refresh of the page the number in the various boxes will always be the same, since it's returned by the local cache
+
+The current behavior provides a good user experience, but there's space for improvement. If the user has a slow Internet connection, he will be stuck on the **Loading...** message until the response from the REST API is returned.
+
+> Can you guess a way to improve the user experience and make the website even more responsive?
+
+We can check if the response from the REST API is stored in the cache. If that's the case, we can immediately display it and update the value only once we have retrieved a fresh response from the server. However, the Service Worker isn't the right place where to implement this technique. We want to implement this behavior only for the values returned by the REST API. We don't want the whole website to adopt this "cache first, network later" technique.
+
+As such, we can change the function which interacts with the REST API to leverage the cache directly in the main website.
+
+1. Open the **sb-admin.js** file in the **js** folder.
+2. Look for the following snippet of code:
+
+    ```javascript
+    fetch(baseUrl + '/api/messages')
+            .then(json)
+            .then(function (data) {
+              $('#messages').html(data.count + " New Messages!");
+            });
+    ```
+3. Delete it and replace it with the following code:
+
+    ```javascript
+    caches.open('pwabuilder-offline')
+    .then(function (cache) {
+      cache.match(baseUrl + '/api/messages')
+      .then(json)
+      .then(function (data) {
+            $('#messages').html(data.count + " New Messages!");
+          });
+      })
+      .then (function() {
+        fetch(baseUrl + '/api/messages')
+        .then(json)
+        .then(function (data) {
+          $('#messages').html(data.count + " New Messages!");
+        });
+    ```
+    
+    Before performing the fetch operation to retrieve the data from the REST service, we open the cache and we look if we have already previously cached the request. If that's the case, we parse the JSON and we immediately display the value in the box in the page (the one identified by the **messages** id). Once we have performed the operation, the rest of the code is the same as before and it downloads a fresh copy of the data from the web service.
+4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
+5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the value will be updated to reflect the new value.
+
+
+    
+
+
+
+
+
+
 
 
 
