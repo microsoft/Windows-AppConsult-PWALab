@@ -519,7 +519,95 @@ As such, we can change the function which interacts with the REST API to leverag
 4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
+## Exercise 3 - Adding push notifications
+One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
 
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+
+In a typical notification scenario, we have 3 actors involved:
+
+- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
+- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+
+However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
+The solution is to use Web Push notifications, which are based on two standard W3C features: 
+
+- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
+- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
+
+Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
+
+The biggest difference compared to the mobile architecture we have seen is that we won't have to register on different services, based on the platform where the website is running. All the major push notification service on the market, in fact, have added support to the web push standard. As such, the user's browser will automatically leverage the most appropriate service: if you're using Chrome, the channels will be registered on FCN; if you're using Edge, on WNS; etc.
+
+The only information you'll need is a set of credentials called **application server keys** or **VAPID keys**, since they need to follow [the VAPID specs](https://tools.ietf.org/html/draft-thomson-webpush-vapid). VAPID keys are composed by a public key, which will be used by the browser to request a subscription channel, and a private key, which will be used by your backend to authenticate the request and send the notification. When the browser receives the notification, it will decrypt and, only if it's successful, he will display it to the user. During this lab, we're going to learn how to get a valid pair of keys.
+
+Push notifications are tightly coupled with a concept we've already seen in the other exercises: service workers. Since this component is registered inside the system and it can run also in background, when the browser is not running, they're the perfect candidate to handle push notification. Service workers, in fact, offer all the APIs to subscribe to the push notification service, to handle the incoming requests, to display the notifications, etc.
+
+### Task 1 - Subscribe to receive push notifications
+Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
+In case of web notifications, this is how a typical JSON payload looks like:
+
+```json
+{
+  "body": "Did you just made a purchase using your credit card ending with 1234?",
+  "icon": "images/ccard.png",
+  "vibrate": [200, 100, 200, 100, 200, 100, 400],
+  "tag": "request",
+  "actions": [
+    { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
+    { "action": "no", "title": "No", "icon": "images/no.png" }
+  ]
+}
+```
+
+However, the browser isn't able to handle push notifications on its own. We have to listen for incoming notifications in our web application and use the information in the provided JSON to visually render it.
+We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
+
+**Please note**. If you have finished Exercise 2, you can use the outcome as starting point. Otherwise, you can use the website included in the folder **Exercise 2/Start**.
+
+1. Open the folder which contains the website in Visual Studio Code.
+2. Select the **sw.js** file in the Explorer panel on the left.
+3. Add the following snippet at the end of the file:
+
+    ```javascript
+    self.addEventListener('push', function (event) {
+      var data = JSON.parse(event.data.text());
+    
+      event.waitUntil(
+          registration.showNotification(data.title, {
+              body: data.message,
+              icon: "/images/contoso.jpg"
+          })
+      );
+    });
+    ```
+
+    The code registers for the **push** event, which is triggered by the service worker whenever there's a new incoming notification. After having parsed the JSON with the incoming request, we use the **registration.showNotification()** method to actually show the notification. As we already did multiple times in Exercise 2, we embed this method inside the **event.waitUntil()** statement to make sure that the browser doesn't terminate the service worker until the notification has been displayed. The **showNotification()** method requires as parameters the title and the structure of the notification. In this case, we are displaying a very simple notification and, as such, we just fill the **body** and the **icon** properties. The first one is filled with data coming from the JSON, while the second one is a fixed path.
+    
+This is all the code we need to handle incoming push notifications. Chrome gives us the opportunity to test the implementation thanks to the developer tools.
+
+1. In case the web server isn't running, press the **Go live** button in the bottom task bar of Visual Studio Code
+2. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
+3. Press F12 to open the developer tools. If you are using a instance of the browser you already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
+4. In the developer tools, click on **Application**, then choose **Service Workers**.
+5. Notice that, in the center, there's a **Push** field under the information about the service worker.
+6. In the field you can specify the JSON payload of a push notification. Add the following one:
+
+    ```json
+    { "title" : "Welcome!", "message": "Hello world!" }
+    ```
+
+    ![](jsonpush.png)
+
+7. Press the **Push** button.
+8. If you have done everything correctly, the notification should pop up and then stored in the Action Center of Windows 10.
+
+    ![](notification.png)
+
+The event we have registered in the service worker is working as expected. However, the current implementation isn't really useful. The notification is displayed only locally and when the website is up & running. In a real push notification scenario, we need to subscribe to a channel and to implement a backend to store them.
+
+This will be our goal in the next excercise.
     
 
 
