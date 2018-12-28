@@ -27,10 +27,7 @@ The lab consists of three exercises, which will help you to take an existing web
 3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will to receive notifications from a backend even when the browser is closed.
 
 ### Computers in this lab
-This lab uses a single Virtual Machine to provide you with the development environment. The VM settings are reported in the table below. Before you begin the lab, please make sure the VM is started and you are logged on to using the credentials provided below. 
-
-- **Username**: 
-- **Password**:
+This lab uses a single Virtual Machine to provide you with the development environment.
 
 The virtual machine is based on Windows 10 October Update (1809) and it includes:
 - Visual Studio 2017
