@@ -22,9 +22,9 @@
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add a manifest to the website, which is a JSON file that describes it. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
-2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the Service Worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
-3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will to receive notifications from a backend even when the browser is closed.
+1. In the first exercise you will add a manifest to the website: This is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
+2. In the second exercise you will add a service worker which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the service worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
+3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
 
 ### Computers in this lab
 This lab uses a single Virtual Machine to provide you with the development environment.
@@ -37,21 +37,25 @@ The virtual machine is based on Windows 10 October Update (1809) and it includes
 If you already have these tools on your computer, feel free to directly use it for the lab instead of the virtual machine. Visual Studio and Visual Studio Code are mutually exclusive. The guidance included in this lab will be focused on Visual Studio Code, but the same tasks can be achieved also with Visual Studio 2017 if you prefer.
 
 ### Scenario
-Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all the activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
-The website is already built using the most recent best practices around web development: it's based on HTML5, JavaScript and CSS and it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine or a mobile phone.
+Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
+The website is already built using the most recent best practices around web development: it's based on HTML5, JavaScript and CSS ; it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine, a tablet or a smartphone.
 
-The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide  offline capabilities, so that the critical information provided by the dashboard can be accessed even when the Internet connection is missing.
+The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide offline capabilities. This way, the last updated critical information provided by the dashboard can be accessed even when the Internet connection is missing.
 
 ### The project
-The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs client side and it's based only on HTML, CSS and JavaScript.
-The information displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
+The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML, CSS and JavaScript.
+The data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
 
 ### Key concepts that will be used during the lab
 
 #### Service Workers
-In the typical web workflow, when you visit a website there's a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
+In the typical web workflow, when you visit a website, there is a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server which replies back with the requested resources.
 
-Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the caching strategy we want to implement. We can forward the request directly to the server and then cache it; we can send the request to the cache and, only if it's missing, forward it to the server. During this lab we'll explore different caching techniques that can be implemented with a service worker.
+Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the caching strategy we want to implement:
+- We can forward the request directly to the server and then cache it
+- We can try to get the resource from the cache and, only if it's missing, forward the request to the server.
+
+During this lab we'll explore different caching techniques that can be implemented with a service worker.
 
 ![](serviceworkers.png)
 
