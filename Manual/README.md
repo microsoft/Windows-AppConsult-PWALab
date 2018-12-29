@@ -42,10 +42,6 @@ The website is already built using the most recent best practices around web dev
 
 The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide offline capabilities. This way, the last updated critical information provided by the dashboard can be accessed even when the Internet connection is missing.
 
-### The project
-The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML, CSS and JavaScript.
-The data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
-
 ### Key concepts that will be used during the lab
 
 #### Service Workers
@@ -112,7 +108,7 @@ Since the **then()** method returns another promise, it's easy to chain multiple
 We're going to heavily use promises during the lab, since all the APIs exposed by the service worker are based on this approach.
 
 #### Fetch APIs
-We have already seen this API in action talking about Promises. Fetch is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
+We have already seen this API in action talking about Promises. **Fetch** is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
 
 The basic usage is quite straightforward. You pass to the **fetch()** method the URL of the resource you want to access: by default, it will be performed a HTTP GET against it. After that, you use the **then()** function to specify the tasks to perform when the operation is completed; alternatively, you can also add a **catch()** statement to intercept any error that might happen and handle it.
 
@@ -144,19 +140,19 @@ In this scenario we're setting up a HTTP POST request and we're specifying its h
 The fetch concept is important also when it comes to implement offline scenarios. The service worker, in fact, is able to intercept all the fetch operations performed by the website, either explicit (you call the **fetch()** method to communicate with a web service) or implicit (the browser automatically downloads a set of HTML, JavaScript and CSS resources when the website is loaded). This is a key requirement to implement offline scenarios, since it will allow us to intercept all the network operations and cache them, based on the technique we have decided to adopt.
 
 #### Cache APIs
-The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specific Request / Responses object pairs. This is how caching implemented using these APIs looks like:
+The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specific Request / Response object pairs. This is how caching implemented with these APIs looks like:
 
 ![](CachingPreview.png)
 
 For each request, the Cache interface stores all the information about the HTTP request. The key identifier is the path of the resource, while the associated value is the full HTTP response, including the content.
-This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, etc.
+This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, an image, etc.
 
 We're going to leverage the cache APIs in the service worker, in combination with the fetch ones. If the fetch operation fails, we're going to return the response from the cache instead than the server. However, cache APIs can be leveraged also directly from the web pages if you need to implement more complex scenarios. For example, to make the website more responsive, you could immediately load some data from the cache directly inside the page and, only later, update it with the response coming from the network.
 
 ### The tools
 For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the require code to implement the various features which will turn your website into a Progressive Web App. However, if you prefer, you can use also Visual Studio 2017.
 
-Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quicly spin a web server to host web applications. Thanks to this extension, we'll be able to quickly test the changes we're going to make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
+Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quickly spin a web server to host web applications. Thanks to this extension, we'll be able to immediately test the changes we make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
 Using this extension is very easy. Just open in Visual Studio Code the folder which contains the website and press the **Go Live** button highlighted in the image below:
 
 ![](golive.png)
@@ -165,6 +161,26 @@ The default browser of the computer will be opened directly on the website which
 
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
+--> WORK IN PROGRESS
+___
+## Exercice 1 - Adding a Manifest
+
+The Contoso Dashboard website is built on [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML5, CSS and JavaScript.
+
+The project was initiated using the <a href="https://startbootstrap.com/template-overviews/sb-admin/" target="_blank">SB Admin template</a>:
+
+![Contoso Dashboard website screen capture](ContosoDashboardWebsiteCapture.png)
+
+We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
+
+### Task 1 - Setup the Contoso Dashboard app locally
+TODO
+
+### Task 2 - Create the Manifest
+TODO
+--> WORK IN PROGRESS
+
+___
 ## Exercise 2 - Adding offline capabilities
 One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
 
@@ -174,7 +190,7 @@ The current web application doesn’t have any kind of offline capability. Since
 2.	Select the folder *add the path of the folder*, which contains the final output of Exercise 1
 3.	Select the **index.html** file from the Explorer panel on the left
 4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available ath the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
+5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
@@ -520,6 +536,7 @@ As such, we can change the function which interacts with the REST API to leverag
 4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
+___
 ## Exercise 3 - Adding push notifications
 One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
 
