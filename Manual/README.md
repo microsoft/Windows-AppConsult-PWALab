@@ -173,7 +173,7 @@ The project was initiated using the <a href="https://startbootstrap.com/template
 
 We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
 
-### Task 1 - Setup the Contoso Dashboard app locally
+### Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 1. Create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
@@ -181,13 +181,15 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 ![Download source code from the repository as ZIP](DownloadCodeAsZIP.png)
 
-3.  When the download is finished, click on the file downloaded file on your browser ![Downloaded file in Chrome](SourceCodeDownloaded.png). Go in the **\Manual\Exercice1\Start** folder inside the zip file and copy (to the clipboard: CTRL+C) all contained files.
-4.  Paste these files in the local *"C:\PWALab"* you just created. 
-5.	Open Visual Studio Code and choose Open folder.
+3.  When Finished, click on the downloaded file in your browser ![Downloaded file in Chrome](SourceCodeDownloaded.png). In the opened zip file, go to the **\Manual\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
+4.  Paste these files in the local *"C:\PWALab"* you've just created. 
+5.	Open Visual Studio Code and choose **Open folder**.
 6.	Select the folder *"C:\PWALab"*
 7.	Select the **index.html** file from the Explorer panel on the left
 8.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
 9.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5050**.
+
+You are ready to work!
 
 ### Task 2 - Create the Manifest
 TODO
