@@ -174,7 +174,20 @@ The project was initiated using the <a href="https://startbootstrap.com/template
 We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
 
 ### Task 1 - Setup the Contoso Dashboard app locally
-TODO
+Let's first be sure we can run and debug the Contoso Dashboard website locally.
+
+1. Create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
+2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **Code** tab / **Clone or download** / **Download ZIP** button.
+
+![Download source code from the repository as ZIP](DownloadCodeAsZIP.png)
+
+3.  When the download is finished, click on the file downloaded file on your browser ![Downloaded file in Chrome](SourceCodeDownloaded.png). Go in the **\Manual\Exercice1\Start** folder inside the zip file and copy (to the clipboard: CTRL+C) all contained files.
+4.  Paste these files in the local *"C:\PWALab"* you just created. 
+5.	Open Visual Studio Code and choose Open folder.
+6.	Select the folder *"C:\PWALab"*
+7.	Select the **index.html** file from the Explorer panel on the left
+8.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
+9.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5050**.
 
 ### Task 2 - Create the Manifest
 TODO
@@ -187,10 +200,10 @@ One of the key requirements to turn our Contoso Dashboard website into an applic
 The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we phisically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
 
 1.	Open Visual Studio Code and choose Open folder.
-2.	Select the folder *add the path of the folder*, which contains the final output of Exercise 1
+2.	Select the folder *"C:\PWALab"*, which contains the final output of Exercise 1
 3.	Select the **index.html** file from the Explorer panel on the left
 4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
+5.	Wait for the server to start and for the website to open inside Chrome. Notice that the website is loading properly, since the connection is active.
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
