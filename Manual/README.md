@@ -152,6 +152,31 @@ This means that, when we load a resource from the cache, we are able to retrieve
 
 We're going to leverage the cache APIs in the service worker, in combination with the fetch ones. If the fetch operation fails, we're going to return the response from the cache instead than the server. However, cache APIs can be leveraged also directly from the web pages if you need to implement more complex scenarios. For example, to make the website more responsive, you could immediately load some data from the cache directly inside the page and, only later, update it with the response coming from the network.
 
+#### Push notifications
+One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
+
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+
+In a typical notification scenario, we have 3 actors involved:
+
+- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
+- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+
+However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
+The solution is to use Web Push notifications, which are based on two standard W3C features: 
+
+- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
+- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
+
+Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
+
+The biggest difference compared to the mobile architecture we have seen is that we won't have to register on different services, based on the platform where the website is running. All the major push notification service on the market, in fact, have added support to the web push standard. As such, the user's browser will automatically leverage the most appropriate service: if you're using Chrome, the channels will be registered on FCN; if you're using Edge, on WNS; etc.
+
+The only information you'll need is a set of credentials called **application server keys** or **VAPID keys**, since they need to follow [the VAPID specs](https://tools.ietf.org/html/draft-thomson-webpush-vapid). VAPID keys are composed by a public key, which will be used by the browser to request a subscription channel, and a private key, which will be used by your backend to authenticate the request and send the notification. When the browser receives the notification, it will decrypt and, only if it's successful, he will display it to the user. During this lab, we're going to learn how to get a valid pair of keys.
+
+Push notifications are tightly coupled with a concept we've already seen: service workers. Since this component is registered inside the system and it can run also in background, even when the browser is not running, they're the perfect candidate to handle push notification. Service workers, in fact, offer all the APIs to subscribe to the push notification service, to handle the incoming requests, to display the notifications, etc.
+
 ### The tools
 For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the require code to implement the various features which will turn your website into a Progressive Web App. However, if you prefer, you can use also Visual Studio 2017.
 
@@ -520,29 +545,12 @@ As such, we can change the function which interacts with the REST API to leverag
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
 ## Exercise 3 - Adding push notifications
-One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
+In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
-Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+- The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
+- A backend, which will be used by the Contoso Dashboard to handle subscription channels. We're going to build a Web API with .NET Core, which will provide the various endpoints to store a new channel, send a push notification, etc.
 
-In a typical notification scenario, we have 3 actors involved:
-
-- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
-- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
-- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
-
-However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
-The solution is to use Web Push notifications, which are based on two standard W3C features: 
-
-- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
-- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
-
-Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
-
-The biggest difference compared to the mobile architecture we have seen is that we won't have to register on different services, based on the platform where the website is running. All the major push notification service on the market, in fact, have added support to the web push standard. As such, the user's browser will automatically leverage the most appropriate service: if you're using Chrome, the channels will be registered on FCN; if you're using Edge, on WNS; etc.
-
-The only information you'll need is a set of credentials called **application server keys** or **VAPID keys**, since they need to follow [the VAPID specs](https://tools.ietf.org/html/draft-thomson-webpush-vapid). VAPID keys are composed by a public key, which will be used by the browser to request a subscription channel, and a private key, which will be used by your backend to authenticate the request and send the notification. When the browser receives the notification, it will decrypt and, only if it's successful, he will display it to the user. During this lab, we're going to learn how to get a valid pair of keys.
-
-Push notifications are tightly coupled with a concept we've already seen in the other exercises: service workers. Since this component is registered inside the system and it can run also in background, when the browser is not running, they're the perfect candidate to handle push notification. Service workers, in fact, offer all the APIs to subscribe to the push notification service, to handle the incoming requests, to display the notifications, etc.
+There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It will list all the registered channels and it will provide a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material.
 
 ### Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -561,7 +569,7 @@ In case of web notifications, this is how a typical JSON payload looks like:
 }
 ```
 
-However, the browser isn't able to handle push notifications on its own. We have to listen for incoming notifications in our web application and use the information in the provided JSON to visually render it.
+However, the browser isn't able to display push notifications on its own. We have to listen for incoming notifications in our web application and use the information in the provided JSON to visually render it.
 We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
 
 **Please note**. If you have finished Exercise 2, you can use the outcome as starting point. Otherwise, you can use the website included in the folder **Exercise 2/Start**.
@@ -607,7 +615,283 @@ This is all the code we need to handle incoming push notifications. Chrome gives
 
 The event we have registered in the service worker is working as expected. However, the current implementation isn't really useful. The notification is displayed only locally and when the website is up & running. In a real push notification scenario, we need to subscribe to a channel and to implement a backend to store them.
 
-This will be our goal in the next excercise.
+This will be our goal in the next exercise.
+
+### Task 2 - Setting up the backend
+As already anticipated, we're going to build a .NET Core Web API as our backend. We will offer the following endpoints:
+
+- **/api/push/key** will be used to share the public VAPID key to the client. This key will be required by the Contoso Dashboard application to request a subscription channel to the notification service.
+- **/api/push/channel** will be used to handle the registered channels. This endpoint will be called, with a HTTP POST, by the web application once the subscription channel has been succesfully generated and it will take care of storing all the information about the channel inside a database, so that it can be reused later to send notifications. The push server application, instead, will call this endpoing with a HTTP GET to retrieve the list of all the registered channels from the database.
+- **/api/push/notification** will be used to send a notification to a specific device. This API will be invoked by the Contoso Backend testing web app.
+
+We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured. 
+To avoid having to manually create all the right HTTP requests to communicate with the push notification service we will use a library called Web Push, which provides a set of APIs which make the overall implementation easier. There are multiple version of this library. The one we're going to use is called [Web Push CSharp](https://github.com/web-push-libs/web-push-csharp), which is a C# wrapper. If your backend is built with another technology, there are additional versions for Java, Node.js, PHP, etc.
+
+1. Open the folder **Exercise 3/Start/Contoso.WebAPI** in Windows.
+2. Right click on an empty space and choose **Open with Visual Studio Code**.
+3. You will find a class called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
+4. If you want to launch and test Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
+
+    ![](vscodedebug.png)
+    
+5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button.
+6. The Web API will be available at the URL **http://localhost:5000**. However, right now you won't be able to perform any test, since we haven't implemented any endpoint yet.
+
+### Task 3 - Configuring the authentication
+As already mentioned, in order to authenticate your backend against the push notification service you need to request a set of VAPID keys. There are multiple ways to obtain them. Even the Web Push library we are using offers a method to generate them. However, for our lab we're going to use a dedicated website.
+
+1. Open Chrome
+2. Copy and paste in the address bar the following URL: [https://web-push-codelab.glitch.me/](https://web-push-codelab.glitch.me/)
+3. You will see a page with a first section titled **Application Server Keys**.
+
+    ![](appserverkeys.png)
+    
+4. Copy the value under **Public Key**. Then go back to the Visual Studio Code instance with the Web API project, look for the file called **appsettings.Development.json** in the Explorer panel and open it.
+5. Paste the value in the **VAPIDPublicKey** property.
+6. Now go back to Chrome and copy the value under **Private Key**. Return to the **appsettings.Development.json** file in Visual Studio Code.
+7. Paste the value in the **VAPIDPrivateKey** property.
+8. Open the **PushController.cs** file under the **Controllers** folder.
+9. Observe how, in the constructor, we read these properties from the configuration file and we store them inside private properties of the class. In addition, we initialize the **WebPushClient** class, which is the class included in the Web Push library to send notifications.
+
+#### Task 4 - Registering the channel
+As already mentioned, the service worker is the core class which offers APIs to handle push notifications, trough an object called **pushManager**. Thanks to it, we can get a reference to the current subscription and, if there isn't one, request a new one.
+
+1. Open the Contoso Dashboard website in Visual Studio Code.
+2. Look, in the Explorer panel, for the file **sb-pwa.js** file in the **js** folder.
+3. Copy and paste the following snippet at the end of the file:
+
+      ```javascript
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.pushManager.getSubscription()
+        .then(function (subscription) {
+          if (subscription) {
+            return subscription;
+          }
+          else {
+            // code to register a new subscription
+        });
+    });
+    ```
+    
+    We need to use the promises approach again. In fact, before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we append the execution of our function to the **ready** event exposed by the **navigator.serviceWorker** object. In our function, we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
+4. What if the subscription doesn't exist? In this case, we need to invoke the **subscribe()** method of the **pushManager** object. However, there's a catch. This method requires, as one of the parameters, a VAPID public key. As such, before writing the code, we need to implement an endpoint in our Web API to expose the VAPID public key we have registered.
+5. Go back to the other instance of Visual Studio Code which is open on the Web API project.
+6. In the Explorer panel, click on the **PushController.cs** file under the **Controllers** folder.
+7. Copy and paste the following snippet at the end of the file:
+
+    ```csharp
+    [HttpGet("key")]
+    public ActionResult Key()
+    {
+        return new JsonResult(publicKey);
+    }
+    ```
+    
+    This snippet of code creates a new endpoint, which will be exposed with the URL **http://localhost:5000/api/push/key**. It simply takes care of returning the value of the **publicKey** property we have previously set with the value from the configuration file.
+    
+8. Now that we have an endpoint that exposes the public VAPID key, we can return to the Visual Studio Code instance with the Contoso Dashboard website and expand the code we were writing before.
+9. Replace the code you have copied in step 3 with the following code snippet:
+
+    ```javascript
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.pushManager.getSubscription()
+        .then(function (subscription) {
+          if (subscription) {
+            return subscription;
+          }
+          else {
+            fetch('http://localhost:5000/api/push/key')
+            .then(function(response) {
+              response.json()
+              .then(function(data) {
+                reg.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(data)
+                })
+                // store the subscription in the backend
+                });
+              });
+            });
+          }
+        });
+    });
+    ```
+
+    In case a subscription doesn't already exist (thus, we include this block inside an **else** statement), we use the **fetch()** method to connect to the endpoint we have just created. Once we get a response, we parse it as JSON. The **data** property will contain the public VAPID key. Now we are ready to call the **subscribe()** method exposed by the **pushManager** object. We need to pass two parameters:
+    
+    - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, Chrome doesn't support it for security reasons. Not setting this property or setting it to **false** will result in an error.
+    - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. 
+10. Now copy and paste the following snippet of code at the end of the file:
+
+    ```javascript
+    function urlBase64ToUint8Array(base64String) {
+      var padding = '='.repeat((4 - base64String.length % 4) % 4);
+      var base64 = (base64String + padding)
+          .replace(/\-/g, '+')
+          .replace(/_/g, '/');
+    
+      var rawData = window.atob(base64);
+      var outputArray = new Uint8Array(rawData.length);
+    
+      for (var i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+      }
+    
+      return outputArray;
+    }
+    ```
+    This is the helper method used to convert into an array the public VAPID key.
+    
+11. Also the **subscribe()** method uses the promises approach. Once the channel has been registered, we'll get an object with all the information about the subscription, which we need to store in our backend. We will need them later, in fact, when we'll want to send a push notification to this specific browser on this specific device.
+12. To move on with the exercise, as such, we need a new endpoint in the backend to store the subscription. Let's return to the Visual Studio Code instance with the Web API.
+13. First we need an object to map the information returned by the browser about the subscription. If we analyze the response of a succesfull **subscribe()** call, we'll see a JSON like the following one:
+
+    ```json
+    {
+      "endpoint": "https://some.pushservice.com/something-unique",
+      "keys": {
+        "p256dh":
+    "BIPUL12DLfytvTajnryr2PRdAgXS3HGKiLqndGcJGabyhHheJYlNGCeXl1dn18gSJ1WAkAPIxr4gK0_dQds4yiI=",
+        "auth":"FPssNDTKnInHVndSTdbKFw=="
+      }
+    }
+    ```
+    
+    The **endpoint** is the unique URL that has been assigned by the notification service to our device / browser. The two properties under **keys**, instead, are required to authenticate the message we're going to send to the notification service.
+    
+14. We can use an online tool like [https://app.quicktype.io/](https://app.quicktype.io/) to convert the JSON into C#. However, you will find this class already implemented in the Web API project. You will find it under the **Models** folder inside the **Subscription.cs** file. Thus is how it looks like:
+
+    ```csharp
+    using System;
+    using Newtonsoft.Json;
+    
+    namespace Contoso.WebAPI.Models
+    {
+        public partial class Subscription
+        {
+            [JsonProperty("subscription")]
+            public SubscriptionClass DeviceSubscription { get; set; }
+        }
+    
+        public partial class SubscriptionClass
+        {
+            [JsonProperty("endpoint")]
+            public Uri Endpoint { get; set; }
+    
+            [JsonProperty("expirationTime")]
+            public object ExpirationTime { get; set; }
+    
+            [JsonProperty("keys")]
+            public Keys Keys { get; set; }
+        }
+    
+        public partial class Keys
+        {
+            [JsonProperty("p256dh")]
+            public string P256Dh { get; set; }
+    
+            [JsonProperty("auth")]
+            public string Auth { get; set; }
+        }
+    }
+    ```
+
+15. The next step is to store the subscription. returned by the browser. For the purpose of this lab, we're going to use a very lightweight and simple solution called [http://www.litedb.org/](http://www.litedb.org/), which is an embedded NoSQL solution. We won't go deep in learning how it works, because it would be out of scope for this lab. We will use it just as a storage where to save all the subscriptions. In a real world scenario, you should use a more scalable solution like SQL Server, Mongo DB or Cosmos DB.
+16. Before storing the channels, we need another entity to map them. It's similar to the **Subscription** one, but it will contain only the key information we need: the URL and the authentication keys. You will find this class already implemented in the Web API project, in the **PushModel.cs** file under the **Models** folder. This is how it looks like:
+
+    ```csharp
+    namespace Contoso.WebAPI.Models
+    {
+        public class PushChannel
+        {
+            public int Id { get; set; }
+    
+            public string ChannelUri { get; set; }
+    
+            public string P256Dh { get; set; }
+    
+            public string Auth { get; set; }
+        }
+    }
+    ```
+
+16. Now we can implement the new HTTP endpoint which will be invoked by the browser when the subscription has been succesfully registered. Open the **PushController.cs** file under the **Controllers** class.
+17. Copy and paste the following code snippet:
+
+    ```csharp
+    [HttpPost("channel")]
+    public ActionResult SaveChannel(Subscription subscription)
+    {
+        using (var db = new LiteDatabase(databasePath))
+        {
+            PushChannel channel = new PushChannel
+            {
+                ChannelUri = subscription.DeviceSubscription.Endpoint.ToString(),
+                P256Dh = subscription.DeviceSubscription.Keys.P256Dh,
+                Auth = subscription.DeviceSubscription.Keys.Auth
+            };
+    
+            var channels = db.GetCollection<PushChannel>();
+            channels.Insert(channel);
+    
+            return new OkResult();
+        }
+    }
+    ```
+    
+    This snippet will expose a new endpoint at the URL **http://localhost:5000/api/push/channel**, which will accept a POST command. Inside the body, it expects to receive a **Subscription** object. The rest of the code is part of the driver exposed by LiteDb. We generate a new **PushChannel** object with the data included in the subscription and then we store it inside the database.
+    
+18. Now that we have an endpoint, we are ready to return to the Visual Studio Code instance with the Contoso Dashboard website and finish the work in **sb-pwa.js** file.
+19. Copy and paste the following code snippet, which will replace the one you have added in step 9:
+
+    ```javascript
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.pushManager.getSubscription()
+        .then(function (subscription) {
+          if (subscription) {
+            return subscription;
+          }
+          else {
+            fetch('http://localhost:5000/api/push/key')
+            .then(function(response) {
+              response.json()
+              .then(function(data) {
+                reg.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(data)
+                })
+                .then(function (subscription) {
+                  fetch('http://localhost:5000/api/push/channel', {
+                        method: 'post',
+                        headers: { 'Content-type': 'application/json' },
+                        body: JSON.stringify({ subscription: subscription })
+                  });
+                });
+              });
+            });
+          }
+        });
+    });
+    ```
+
+    This code completes the implementation of the **subcribe()** method. Once the subscription is completed with success, we use the **fetch()** method to call the endpoint we have just implemented. In this case, we're passing additional parameters to the request since: 1) we need to use the POST method 2) we need to include, inside the body, the subscription we have just created, converted as a JSON object.
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 

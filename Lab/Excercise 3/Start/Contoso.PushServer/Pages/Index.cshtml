@@ -1,0 +1,43 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <table>
+        <tr>
+            <td>Channel Uri</td>
+            <td>Send</td>
+        </tr>
+        @foreach (var channel in Model.Channels)
+        {
+            <tr>
+                <td>@channel.ChannelUri</td>
+                <td><button onclick="sendNotification('@channel.ChannelUri', '@channel.P256Dh', '@channel.Auth')">Send</button></td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+<script type="text/javascript">
+    function sendNotification(uri, p256dh, auth) {
+
+        var subscription = {};
+        subscription["channelUri"] = uri;
+        subscription["p256dh"] = p256dh;
+        subscription["auth"] = auth;
+
+        fetch('http://localhost:5000/api/push/notification', {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json' },
+            body: JSON.stringify(subscription)
+        });
+    }
+
+</script>
