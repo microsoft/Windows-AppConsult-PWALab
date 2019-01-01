@@ -172,100 +172,101 @@ The project was initiated using the <a href="https://startbootstrap.com/template
 
 We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
 
-Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding a web standard file which is the **Web app manifest**. The manifest will define the features of an app such as name, icon, splash screen, theme colors and so on. 
+Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding a web standard file which is the **Web app manifest**. The manifest will define the features of the app such as name, icon, splash screen, theme colors and so on. 
 
 ### Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
 1. In the Windows Explorer, create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
-2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **Code** tab / **Clone or download** / **Download ZIP** button.
+2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **Code** tab / **Clone or download** button / **Download ZIP** button.
 
 ![Download source code from the repository as ZIP](DownloadCodeAsZIP.png)
 
-3.  When Finished, click on the downloaded file in your browser.
+3.  When ready, click on the downloaded file in your browser to open it.
 
 ![Downloaded file in Chrome](SourceCodeDownloaded.png)
 
 4.  In the opened zip file, go to the **\Manual\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
 5.  Paste these files in the local *"C:\PWALab"* you've just created. 
-6.	Open Visual Studio Code, use the **File** menu and choose **Open folder...**.
+6.	Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
 ![](OpenFolder.png)
 
-7.	Select the folder *"C:\PWALab"*
-8.	Select the **index.html** file from the Explorer panel on the left
-9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
+7.	Select the *"C:\PWALab"* folder.
+8.	Select the **index.html** file from the Explorer panel on the left.
+9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
 10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5050**.
 
-You are ready to work!
+You are ready to work on the code!
 
 ### Task 2 - Create the Manifest
 The Web App Manifest is beeing defined by the W3C; The <a href="https://www.w3.org/TR/appmanifest/" target="_blank">specification</a> is still in progress. Nevertheless, a good schema's description can be found at <a href="http://json.schemastore.org/web-manifest" target="_blank">http://json.schemastore.org/web-manifest</a>.
 
 Basiquely, the manifest is JSON-formatted file describing key information about the app. Here are the main elements:
-- name - XXXXXXXXXX
-- short_name - YYYYYYYYY
-- start_url - ZZZZZZZZZZZ
-- description - WWWWWWWWWWW
-- scope - QQQQQQQQQQQ
-- icons - IIIIIIIIIII
-- background_color - BBBBBBBBBB
-- theme_color - TTTTTTTTTTTTTT
-- orientation - OOOOOOOOOOOOOOOO
+- **name** - Long name of the application.
+- **short_name** - Shortest name of the application.
+- **start_url** - Url requested for the main page when the app starts.
+- **description** - Purpose and description of the application.
+- **scope** - Navigation scope of the application. If the user navigates outside this 'scope', the web page will be opened in the Web browser outside the application. The scope value is a relative url like `/PWAApp/`.
+- **icons** - Array of different sized icons that will be used in the different OS's contexts. For exemple: App icon in the applications' list, App icon in the taskbar if any, App icon in the Store, etc.
+- **background_color** - Expected background of the application.
+- **theme_color** - Default theme color for the application.
+- **orientation** - Default orientation requested for the application.
+- **display** - Prefered display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
+
+You can refer to https://developer.mozilla.org/en-US/docs/Web/Manifest for further details.
 
 Let's add a manifest to the Contose Dashboard website:
-1. In Visual Studio Code, in the Explorer panel (on the left), click on the **New File** button.
+1. Within Visual Studio Code, in the Explorer panel (on the left), click on the **New File** button.
 
 ![](newfileButton.png)
 
 2. Name it *"manifest.json"* ![](ManifestJson.png)
-3. The manifest.json schema gives the available 
+3. Copy/Paste the following json as the content: 
 
 ```json
 {
   "$schema": "http://json.schemastore.org/web-manifest",
-  "short_name": "ContosoDashboard",
+  "short_name": "ContosoBoard",
   "name": "Contoso Dashboard",
   "description": "The Contoso Dashboard keeps track of all activities that are happening inside the company",
   "scope": "/",
   "icons": [
     {
-      "src": "img2x.jpg",
+      "src": "Contoso96x96.png",
       "sizes": "96x96",
-      "type": "image/jpg"
+      "type": "image/png"
     },
     {
-      "src": "img3x.jpg",
-      "sizes": "144x144",
-      "type": "image/jpg"
-    },
-    {
-      "src": "img4x.jpg",
+      "src": "Contoso192x192.png",
       "sizes": "192x192",
-      "type": "image/jpg"
-    },
-    {
-      "src": "img6x.jpg",
-      "sizes": "512x512",
-      "type": "image/jpg"
+      "type": "image/png"
     }
   ],
-  "background_color": "#EEE",
-  "theme_color": "#1565c0",
+  "background_color": "#FFFFFF",
+  "theme_color": "#409E8E",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "any"
 }
 ```
 
+Some explanations: 
+- The scope is defined to `/` so that all navigation within the Contoso website will be displayed inside the application.
+- We provide 2 icons. One with the 96x96 pixels dimension with the logo only and another one 192x192 sized with logo and Company name.
+- The background color is white ; Theme color is green/gray (the one of the Contoso logo).
+- The start url is the website default page.
+- Standalone's display we make the app look and feel the same as a classic app.
 
 ### Task 3 - Add the manifest to the website
-In order to add the manifest to the Contoso Dashboard website, just add `<link>` element in the default page. Here are the steps:
+In order to add the manifest to the Contoso Dashboard website, we just add a `<link>` element in the default page. Here are the steps:
 1. Using Visual Studio Code, open the **index.html** file.
 2. Inside the `<head>` element and just before the `<title>` element add the following tag:
 
 ```html
 <link rel="manifest" href="/manifest.json">
 ```
+
+As you noticed, in the previous task, we use 2 icons. These icons were already created and put for you at the website root.
 
 ### Task 4 - Install the PWA
 TODO
