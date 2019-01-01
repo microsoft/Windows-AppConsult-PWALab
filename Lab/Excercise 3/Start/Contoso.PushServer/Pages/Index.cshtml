@@ -5,18 +5,18 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to Contoso Backend</h1>
+    <p>Select a subscription to send a push notification.</p>
 
     <table>
         <tr>
-            <td>Channel Uri</td>
-            <td>Send</td>
+            <td><strong>Channel Uri</strong></td>
+            <td><strong>Send notification</strong></td>
         </tr>
         @foreach (var channel in Model.Channels)
         {
             <tr>
-                <td>@channel.ChannelUri</td>
+                <td>@channel.ChannelUri.Substring(0, 65)...</td>
                 <td><button onclick="sendNotification('@channel.ChannelUri', '@channel.P256Dh', '@channel.Auth')">Send</button></td>
             </tr>
         }

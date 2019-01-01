@@ -14,15 +14,12 @@ namespace PushApp.WebApi.Controllers
     [ApiController]
     public class PushController : ControllerBase
     {
-        private IConfiguration configuration;
         private string databasePath;
         private string privateKey;
         private string publicKey;
 
         public PushController(IConfiguration configuration)
         {
-            this.configuration = configuration;
-
             databasePath = configuration["DatabasePath"];
             publicKey = configuration["VAPIDPublicKey"];
             privateKey = configuration["VAPIDPrivateKey"];
