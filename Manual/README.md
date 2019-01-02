@@ -177,15 +177,12 @@ Indeed, the goal is to make the website a Progressive Web Application. This is a
 ### Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
 1. In the Windows Explorer, create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
-2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **Code** tab / **Clone or download** button / **Download ZIP** button.
-
-![Download source code from the repository as ZIP](DownloadCodeAsZIP.png)
-
+2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **releases** tab and donwload the latest release.
 3.  When ready, click on the downloaded file in your browser to open it.
 
 ![Downloaded file in Chrome](SourceCodeDownloaded.png)
 
-4.  In the opened zip file, go to the **\Manual\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
+4.  In the opened zip file, go to the **\Lab\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
 5.  Paste these files in the local *"C:\PWALab"* you've just created. 
 6.	Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
