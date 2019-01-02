@@ -26,6 +26,16 @@ The lab consists of three exercises, which will help you to take an existing web
 2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the Service Worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
 3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will to receive notifications from a backend even when the browser is closed.
 
+All the content of the exercises is stored inside a zip file that you can download from [add the link here].
+Unpack it in a folder of your choice on your computer before starting the lab.
+
+For each exercise, you will find:
+
+- A **Start** folder, which is the starting point
+- An **End** folder, which is the final outcome of the exercise, in case you get stuck and you can't complete it
+
+However, if you properly follow all the steps, you can start every exercise with the outcome of the work you did for the previous one.
+
 ### Computers in this lab
 This lab uses a single Virtual Machine to provide you with the development environment. The VM settings are reported in the table below. Before you begin the lab, please make sure the VM is started and you are logged on to using the credentials provided below. 
 
@@ -51,7 +61,7 @@ The information displayed in the dashboard are taken from a set of REST services
 
 ### Key concepts that will be used during the lab
 
-**Please note**. The following information are provided in case you're planning to follow this lab on your own or from home. If you are following this lab as part of a live training class, feel free to skip part and jump directly to the beginning of the first exercise. These concepts, in fact, should have already be explained by the trainers of the lab before starting the practical exercises.
+**Please note**. The following information are provided in case you're planning to follow this lab on your own or from home. If you are following this lab as part of a live training class, feel free to skip it and jump directly to the beginning of the first exercise. These concepts, in fact, should have already be explained by the trainers of the lab before starting the practical exercises.
 
 #### Service Workers
 In the typical web workflow, when you visit a website there's a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
@@ -115,7 +125,7 @@ We're going to heavily use promises during the lab, since all the APIs exposed b
 #### Fetch APIs
 We have already seen this API in action talking about Promises. Fetch is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
 
-The basic usage is quite straightforward. You pass to the **fetch()** method the URL of the resource you want to access: by default, it will be performed a HTTP GET against it. After that, you use the **then()** function to specify the tasks to perform when the operation is completed; alternatively, you can also add a **catch()** statement to intercept any error that might happen and handle it.
+The basic usage is quite straightforward. You pass to the **fetch()** method the URL of the resource you want to access: by default, it will perform a HTTP GET against it. After that, you use the **then()** function to specify the tasks to perform when the operation is completed; alternatively, you can also add a **catch()** statement to intercept any error that might happen and handle it.
 
 ```javascript
 fetch('./api/data.json')
@@ -130,7 +140,7 @@ fetch('./api/data.json')
   });
 ```
 
-Alternatively, if you need to perform more advanced operations, you have the opportunity to pass another parameter, after the URL, with more configuration options, as in the following sample:
+If you need to perform more advanced operations, you have the opportunity to pass another parameter, after the URL, with more configuration options, as in the following sample:
 
 ```javascript
 fetch('./api/push/savechannel', {
@@ -163,7 +173,7 @@ In a typical notification scenario, we have 3 actors involved:
 
 - The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
 - The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
-- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in an application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implement an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in an application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
 
 However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
 The solution is to use Web Push notifications, which are based on two standard W3C features: 
@@ -180,7 +190,7 @@ The only information you'll need is a set of credentials called **application se
 Push notifications are tightly coupled with a concept we've already seen: service workers. Since this component is registered inside the system and it can run also in background, even when the browser is not running, they're the perfect candidate to handle push notification. Service workers, in fact, offer all the APIs to subscribe to the push notification service, to handle the incoming requests, to display the notifications, etc.
 
 ### The tools
-For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the require code to implement the various features which will turn your website into a Progressive Web App. However, if you prefer, you can use also Visual Studio 2017.
+For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the code required to implement the various features which will turn your website into a Progressive Web App. However, if you prefer, you can use also Visual Studio 2017.
 
 Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quicly spin a web server to host web applications. Thanks to this extension, we'll be able to quickly test the changes we're going to make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
 Using this extension is very easy. Just open in Visual Studio Code the folder which contains the website and press the **Go Live** button highlighted in the image below:
@@ -197,10 +207,10 @@ One of the key requirements to turn our Contoso Dashboard website into an applic
 The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we phisically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
 
 1.	Open Visual Studio Code and choose Open folder.
-2.	Select the folder *add the path of the folder*, which contains the final output of Exercise 1
+2.	Select the folder **Exercise2/Start/Contoso.Dashboard** from the location where you have uncompressed the zip file of the lab.
 3.	Select the **index.html** file from the Explorer panel on the left
 4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available ath the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
+5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
@@ -209,7 +219,7 @@ The current web application doesn’t have any kind of offline capability. Since
 ![](nointernet.png)
 
 ### Task 1 - Add a service worker
-As already mentioned at the beginning of the lab, the Service Worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker it’s able to intercept all requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
+As already mentioned at the beginning of the lab, the Service Worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker, it’s able to intercept all the requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
 
 Let’s start to add a basic service worker to our Contoso Dashboard website. 
 
@@ -253,7 +263,6 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 ```html
 <script src="js/sb-pwa.js"></script>
 ```
-
 
 That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5050** in Chrome and press F12 to enable the developer tools. Move to the **Application** tab and you should see something like this:
 
@@ -323,7 +332,7 @@ Let’s define a new function to cache these pages inside the service worker:
     
     This code uses the cache APIs to open the cache we have created for our application, by using the **open()** method exposed by the **caches** object. The name of the cache doesn’t have to follow a specific naming convention, you can use the one you prefer. In our case, we're using **pwabuilder-offline**. This method will create the cache if it doesn't exist, so it's safe to call it even if it's the first time the web application is opened. When the operation is completed with success, we can move on and store some pages using the **addAll()** method, passing as parameter an array of strings with the list of pages we want to include in the cache.
     
-3.	The next step is to invoke the above function as soon as the service worker is installed. We can use one of the events exposed by the service worker, called install. Copy and paste the follow snippet before the **preLoad()** function:
+3.	The next step is to invoke the above function as soon as the service worker is installed. We can use one of the events exposed by the service worker, called **install**. Copy and paste the follow snippet before the **preLoad()** function:
 
     ```javascript
     self.addEventListener('install', function(event) {
@@ -338,7 +347,7 @@ Let’s define a new function to cache these pages inside the service worker:
 6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
-9.	Notice how, despite you have visited only the main page of the websites, also other pages have been cached:
+9.	Notice how, despite you have visited only the main page of the website (**index.html**), also other pages have been cached:
 
     ![](cacheall.png)
     
@@ -376,7 +385,7 @@ We need to change the current handler of the **fetch** event in a way that, if t
 
 It's now time to test the code:
 
-1. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
+1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. 
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
 3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
 4. Press F12 and open the developer tools.
@@ -390,7 +399,7 @@ Compared to the previous tests, this time we're indeed getting something back an
 
 > Can you guess why we are seeing a broken page?
 
-When we have registered the Service Worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files; or by scripts stored in JavaScript files. None of them has been added in the cache.
+When we have registered the Service Worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files; by scripts stored in JavaScript files; etc. However, none of them has been added in the cache.
 
 We can verify that this is indeed the case with the developer tools. Move to the **Network** tab. You will notice how the **index.html** is indeed being returned by the Service Worker, while all the other requests are failing:
 
@@ -413,13 +422,13 @@ However, this event can be used also to write to the cache. This is what we're g
       var updateCache = function(request){
         return caches.open('pwabuilder-offline').then(function (cache) {
           return fetch(request).then(function (response) {
-            console.log('[PWA Builder] add page to offline '+response.url)
+            console.log('[PWA Builder] add page to offline '+response.url);
             return cache.put(request, response);
           });
         });
       };
     
-      event.waitUntil(updateCache(event.request));
+      event.waitUntil(updateCache(event.request.clone()));
     
       event.respondWith(
         fetch(event.request).catch(function(error) {
@@ -430,7 +439,7 @@ However, this event can be used also to write to the cache. This is what we're g
           //If not in the cache, then return error page
           return caches.open('pwabuilder-offline').then(function (cache) {
             return cache.match(event.request).then(function (matching) {
-              var report =  !matching || matching.status == 404 ? cache.match('offline.html'): matching;
+              var report =  !matching || matching.status == 404 ? cache.match('404.html'): matching;
               return report;
             });
           });
@@ -438,11 +447,9 @@ However, this event can be used also to write to the cache. This is what we're g
       );
     });
     ```
+
     
-    The main part of the snippet is the same we have created in task 2. When the **fetch** event is raised, we intercept the request and, in case the connection fails, we look if it was already cached. If yes, we return it; otherwise, we redirect the user to the offline page.
-    
-    However, inside the event handler we have defined also a new function called **updateCache()**. This operation does the opposite process: it sends the request to the server, it takes the response and, by using the **put()** method offered by the **cache** object, it stores it inside the cache.
-    
+    The main part of the snippet is the same we have created in task 2. When the **fetch** event is raised, we intercept the request and, in case the connection fails, we look if it was already cached. If yes, we return it; otherwise, we redirect the user to the offline page. However, inside the event handler we have defined also a new function called **updateCache()**. This operation does the opposite process: it sends the request to the server, it takes the response and, by using the **put()** method offered by the **cache** object, it stores it inside the cache.
     The **updateCache()** function is then invoked using the **event.waitUntil()** method. This approach makes sure that the operation doesn't get terminated until the response has been properly stored in the cache.
     
 Let's test the new behavior.
@@ -484,7 +491,7 @@ The information displayed in these boxes is retrieved from a REST service expose
         .then(function (data) {
           $('#messages').html(data.count + " New Messages!");
         });
-    }
+    });
     
     function json(response) {
     return response.json();
@@ -546,6 +553,8 @@ As such, we can change the function which interacts with the REST API to leverag
 4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
+If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
+
 ## Exercise 3 - Adding push notifications
 In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
@@ -593,7 +602,7 @@ We're going to do this operation in the service worker since, as already explain
     });
     ```
 
-    The code registers for the **push** event, which is triggered by the service worker whenever there's a new incoming notification. After having parsed the JSON with the incoming request, we use the **registration.showNotification()** method to actually show the notification. As we already did multiple times in Exercise 2, we embed this method inside the **event.waitUntil()** statement to make sure that the browser doesn't terminate the service worker until the notification has been displayed. The **showNotification()** method requires as parameters the title and the structure of the notification. In this case, we are displaying a very simple notification and, as such, we just fill the **body** and the **icon** properties. The first one is filled with data coming from the JSON, while the second one is a relative path that points to an image included in our web application.
+    The code registers for the **push** event, which is triggered by the service worker whenever there's a new incoming notification. After having parsed the JSON with the incoming request, we use the **registration.showNotification()** method to actually show the notification. As we already did in Exercise 2, we embed this method inside the **event.waitUntil()** statement to make sure that the browser doesn't terminate the service worker until the notification has been displayed. The **showNotification()** method requires as parameters the title and the structure of the notification. In this case, we are displaying a very simple notification and, as such, we just fill the **body** and the **icon** properties. The first one is filled with data coming from the JSON, while the second one is a relative path that points to an image included in our web application.
     
 This is all the code we need to handle incoming push notifications. Chrome gives us the opportunity to test the implementation thanks to the developer tools.
 
@@ -620,13 +629,14 @@ The event we have registered in the service worker is working as expected. Howev
 This will be our goal in the next exercise.
 
 ### Task 2 - Setting up the backend
-As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints alread implemented. 
+As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints already implemented. 
 
 
-1. Open the folder **Exercise 3/Start/Contoso.WebAPI** in Windows.
+1. Open Visual Studio Code.
+2. Choose **File -> Open Folder** and look for the folder **Exercise 3/Start/Contoso.WebAPI** in the location where you have unzipped the lab material.
 2. Right click on an empty space and choose **Open with Visual Studio Code**.
 3. You will find a class called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
-4. If you want to launch and test Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
+4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
 
     ![](vscodedebug.png)
     
@@ -634,7 +644,7 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
 6. The Web API will be available at the URL **http://localhost:5000**. We will reuse this URL later when we're going to implement subscriptions in the Contoso Dashboard website.
 
 ### Task 3 - Configuring the authentication
-As already mentioned, in order to authenticate your backend against the push notification service, you need to request a set of VAPID keys. There are multiple ways to obtain them. For our lab we're going to use an online tool.
+In order to authenticate your backend against the push notification service you need to request a set of VAPID keys. There are multiple ways to obtain them. For our lab we're going to use an online tool.
 
 1. Open Chrome
 2. Copy and paste in the address bar the following URL: [https://web-push-codelab.glitch.me/](https://web-push-codelab.glitch.me/)
@@ -714,7 +724,7 @@ public ActionResult SaveChannel(Subscription subscription)
 }
 ```
 
-For the purpose of this lab, subscriptions will be saved using [**LiteDb**](http://www.litedb.org/), which is an embedded NoSQL solution. We won't go deep in learning how it works, because it would be out of scope for this lab. It's important just to understand that it's a storage solution that we're using to save all the subscriptions, so that we can reuse them later. In a real world scenario, you should use a more scalable solution like SQL Server, Mongo DB or Cosmos DB.
+For the purpose of this lab, subscriptions will be saved using [**LiteDb**](http://www.litedb.org/), which is an embedded NoSQL solution. We won't go deep in learning how it works, because it would be out of scope for this lab. It's important just to understand that it's a storage solution that we're using to save all the subscriptions, so that we can reuse them later. In a real world scenario, you should use a more scalable solution like SQL Server, Mongo DB or Cosmos DB. If you want to explore the content of the database, you can use a tool like [LiteDB Explorer](https://github.com/julianpaulozzi/LiteDbExplorer). The database file is stored in the path **C:\ProgramData\channels.db**. However, it isn't required to complete the lab.
 
 This method uses two classes, which are stored inside the **Models** folder:
 
@@ -722,12 +732,16 @@ This method uses two classes, which are stored inside the **Models** folder:
 
     ```json
     {
-      "endpoint": "https://some.pushservice.com/something-unique",
-      "keys": {
-        "p256dh":
-    "BIPUL12DLfytvTajnryr2PRdAgXS3HGKiLqndGcJGabyhHheJYlNGCeXl1dn18gSJ1WAkAPIxr4gK0_dQds4yiI=",
-        "auth":"FPssNDTKnInHVndSTdbKFw=="
-      }
+        "subscription": 
+        {
+            "endpoint":"https://some.pushservice.com/something-unique",
+            "expirationTime":null,
+            "keys":
+            {
+                "p256dh":"BBtX4v2xYDIbU6prgd5tv-rjSzJNB920YXwIA5II3rlF-s0sAeaVIQ7lfbzndfntgswn0DfKcHyVah4zZACcjD4",
+                "auth":"YbI2Pb8GvibCTEJDN0cyRQ"
+            }
+        }
     }
     ```
     
@@ -781,13 +795,13 @@ Now that we have verified that we have all the endpoints we need, we can impleme
  
     This snippet is made by different promises chained together. Let's analyze in the detail the workflow:
     
-    1. Before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we append the execution of our function to the **ready** event exposed by the service worker. Then we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
-    2. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
-    3. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
+    a. Before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we append the execution of our function to the **ready** event exposed by the service worker. Then we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
+    b. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
+    c. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
     
-     - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, Chrome doesn't support it for security reasons. Not setting this property or setting it to **false** will result in an error.
-    - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
-    4. If the new subscription is registered successfully, we need to store in it in our backend. As such, we perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
+         - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, not all the browser support this scenario it for security reasons. Not setting this property or setting it to **false** will result in an error.
+        - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
+    d. If the new subscription is registered successfully, we need to store in it in our backend. As such, we perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
     
 4. Now copy and paste the following snippet at the end of the code:
     
@@ -838,7 +852,7 @@ The implementation is now complete. We are ready to test it!
     
 13. The command will build and run the Contoso Backend website, which will be available at the URL **http://localhost:1983**
 14. Open a new instance of Chrome and type this URL in the address bar.
-15. In the page you should see the subscription you have just registered with its unique channel URI.
+15. In the page you should see the subscription you have just registered with its unique channel URI. The website is communicating with the **/api/channel** endpoint exposed by our Web API, this time however with a GET instead of a POST. In this case, the endpoint is simply returning the list of all the subscriptions stored in the database.
 
     ![](googlechannel.png)
     
@@ -850,11 +864,11 @@ The implementation is now complete. We are ready to test it!
     
 19. Notice how the URI of this new channel will be based on a domain like **db5p.notify.windows.com**. This time we have opened the website in Edge and, as such, we are automatically leveraging the Windows Notification Service to handle subscriptions.
 
-Near every subscription you will see a button called **Send**. However, if you press it, nothing will happen. We need, first, to implement a new endpoint in the Web API to send a push notification. This is the goal of the next and final task.
+Near every subscription you will see a button called **Send**. However, if you press it, nothing will happen. We need, first, to implement a new endpoint in the Web API to send a push notification. This is the goal of the next task.
 
 #### Task 5 - Sending a push notification 
 
-Sending a push notification to a browser / device means sending a HTTP request with the JSON payload to the unique URI channel assigned to the subscription. However, there's some of work involved. You need to prepare the payload in the right way; you need to add the proper authentication headers, etc. To simplify the job we will use a library called Web Push, which provides a set of APIs which make the overall implementation easier. There are multiple version of this library. The one we're going to use is called [Web Push CSharp](https://github.com/web-push-libs/web-push-csharp), which is a C# wrapper. If your backend is built with another technology, there are additional versions for Java, Node.js, PHP, etc. This library is already installed in the Web API project using the dedicated [NuGet](https://www.nuget.org/packages/WebPush/) package.
+Sending a push notification to a browser / device means sending a HTTP request with the JSON payload to the unique URI channel assigned to the subscription. However, there's some work involved. You need to prepare the payload in the right way; you need to add the proper authentication headers, etc. To simplify the job we will use a library called Web Push, which provides a set of APIs which make the overall implementation easier. There are multiple version of this library. The one we're going to use is called [Web Push CSharp](https://github.com/web-push-libs/web-push-csharp), which is a C# wrapper since our Web API is built on top of .NET Core. If your backend is built with another technology, there are additional versions for Java, Node.js, PHP, etc. This library is already installed in the Web API project using the dedicated [NuGet](https://www.nuget.org/packages/WebPush/) package.
 
 The Contoso Backend application already includes a **Send** button, which invokes the following JavaScript function:
 
@@ -907,7 +921,7 @@ However, as we have experienced at the end of Task 4, the **Send** button isn't 
 
     First we create a new instance of the **WebPushClient** class, which is provided by the Web Push library. Then we create a **VapidDetails** object, which contains all the information to authenticate against the notification service: a URL or a mail address of the owner plus the public and private VAPID keys we have previously generated in Task 2.
     The next step is to create a **PushSubscription** object, passing as parameter the three information which identify the subscription: the URI of the channel and the two specific authentication keys assigned to it. We retrieve them from the **PushChannel** object which has been passed as parameter by the Contoso Backend application.
-    In the end, we build a new **Notification** object, which is a C# representation of a web notification. If you remember what you have learned in Task 1, this C# object maps the following JSON:
+    In the end, we build a new **Notification** object, which is a C# representation of a web notification. This entity maps the following JSON:
     
     ```json
     { 
@@ -916,7 +930,7 @@ However, as we have experienced at the end of Task 4, the **Send** button isn't 
     }
     ```
     
-    In the end, we invoke the **SendNotificationAsync()** method exposed by the **WebPushClient** class passing, as parameters, the three objects we have just built: a reference to the subscription, the JSON payload of the notification and the VAPID authentication keys.
+    In the end, we invoke the **SendNotificationAsync()** method exposed by the **WebPushClient** class passing, as parameters, the three objects we have just built: the target subscription, the JSON payload of the notification and the VAPID authentication keys.
     
 That's it. Now that we have our new endpoint, the **Send** button in the Contoso Backend web application will work as expected. Let's test this!
 
@@ -960,6 +974,8 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
 6. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
 7. A notification will be displayed in the lower left corner of your screen. Click on it.
 8. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
+
+    ![](contosonotification.png)
 
 This was just a basic example on how to handle the activation of a push notification. You can also implement more advanced strategies, like using custom actions (as explained [in this article](https://developers.google.com/web/fundamentals/push-notifications/notification-behaviour)) or using the **focus()** method to reuse an existing instance of the browser if it's already opened (as explained [in this article](https://developer.mozilla.org/en-US/docs/Web/API/WindowClient/focus).
 
