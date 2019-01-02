@@ -60,25 +60,5 @@ namespace PushApp.WebApi.Controllers
                 return new OkObjectResult(list);
             }
         }
-
-        [HttpPost("notification")]
-        public async Task<ActionResult> SendNotification(PushChannel channel)
-        {
-            WebPushClient client = new WebPushClient();
-            VapidDetails vapiDetails = new VapidDetails("https://aka.ms/appconsultblog", publicKey, privateKey);
-            PushSubscription subscription = new PushSubscription(channel.ChannelUri, channel.P256Dh, channel.Auth);
-
-            Notification message = new Notification
-            {
-                Title = "Test notification",
-                Message = "Hey, you have a notification!"
-            };
-
-            string json = JsonConvert.SerializeObject(message);
-
-            await client.SendNotificationAsync(subscription, json, vapiDetails);
-
-            return new OkResult();
-        }
     }
 }
