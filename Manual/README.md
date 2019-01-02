@@ -51,6 +51,8 @@ The information displayed in the dashboard are taken from a set of REST services
 
 ### Key concepts that will be used during the lab
 
+**Please note**. The following information are provided in case you're planning to follow this lab on your own or from home. If you are following this lab as part of a live training class, feel free to skip part and jump directly to the beginning of the first exercise. These concepts, in fact, should have already be explained by the trainers of the lab before starting the practical exercises.
+
 #### Service Workers
 In the typical web workflow, when you visit a website there's a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
 
@@ -927,6 +929,40 @@ That's it. Now that we have our new endpoint, the **Send** button in the Contoso
 7. You should see a notification appearing in the lower left corner of the screen and, after a few seconds, it should move to the Action Center in Windows 10.
 8. If you want to test that service workers are indeed able to work also in background, make sure that you don't have any instance of Edge running, then hit the **Send** button near the subscription you have registered in Edge in the previous task (it's the one with the channel URI that starts with https://db5p.notify.windows.com). 
 9. Notice how, despite the browser isn't open, you'll receive the notification anyway.
+
+### Task 6 - Handling the activation from a push notification
+Our current solution is working great, but it has a serious limitation: if you try to click on a notification, you will notice that nothing will happen.
+This is expected. By default, the browser isn't able to handle the notification, because the action to take can change based on the web application who received it.
+
+As such, it's up to you to handle it, thanks to another event exposed by the service worker called **notificationclick**. Let's do it!
+
+1. Open Visual Studio Code on the Contoso Dashboard website
+2. Locate the file **sw.js** in the Explorer panel on the left and select it
+3. Move to the bottom of the file and copy and paste the following code snippet:
+
+    ```javascript
+    self.addEventListener('notificationclick', function(event) {
+      event.notification.close();
+      var notification = event.notification;
+      var title = notification.title;
+      var message = notification.body;
+    
+      event.waitUntil(clients.openWindow('notifications.html?title='+title+'&message='+message));
+    });
+    ```
+    We subscribe to the **notificationclick** event, which is triggered whenever the user clicks on a notification which belongs to our web application. Then, thanks to the **notification** property of the **event** object, we get access to all the information included in the payload, such as the title and the message. We have access also to some methods to interact with the notification. In our case we invoke the **close()** event to make it disappear, since not all the platforms handle this scenario automatically.
+    In the end, we call the **clients.openWindow()** method specifying a dedicated page of our web application (**notifications.html**) and adding, as query string parameters, the title and the message of the page. We wrap this method inside the **event.waitUntil()** function to make sure the service worker doesn't get terminated by the browser before we have completed our task.
+    
+4. Now we're ready to test our work. In case the web server isn't still running from the previous tasks, press the **Go Live** button in the bottom bar of Visual Studio Code.
+5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
+6. Press F12 to open the developer tools. If you are using a instance of the browser you have already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
+7. Now open the Contoso Backend website. If it's still not running from the previous task, open the **Exercise 3/Start/Contoso.PushServer** folder in File Explorer. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
+6. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
+7. A notification will be displayed in the lower left corner of your screen. Click on it.
+8. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
+
+This was just a basic example on how to handle the activation of a push notification. You can also implement more advanced strategies, like using custom actions (as explained [in this article](https://developers.google.com/web/fundamentals/push-notifications/notification-behaviour)) or using the **focus()** method to reuse an existing instance of the browser if it's already opened (as explained [in this article](https://developer.mozilla.org/en-US/docs/Web/API/WindowClient/focus).
+
 
 
 

@@ -59,6 +59,14 @@
         $('#tickets').html(data.count + " New Tickets!");
       });
     });
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var title = urlParams.get('title');
+    var message = urlParams.get('message');
+
+    $('#notificationTitle').html(title);
+    $('#notificationMessage').html(message);
+
   });
 
   function json(response) {

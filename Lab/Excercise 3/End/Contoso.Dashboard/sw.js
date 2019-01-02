@@ -40,8 +40,8 @@ self.addEventListener('install', function(event) {
   self.addEventListener('fetch', function(event) {
     var updateCache = function(request){
       return caches.open('pwabuilder-offline').then(function (cache) {
-        return fetch(request).then(function (response) {
-          console.log('[PWA Builder] add page to offline '+response.url)
+        return fetch(request.clone()).then(function (response) {
+          console.log('[PWA Builder] add page to offline '+response.url);
           return cache.put(request, response);
         });
       });
@@ -66,13 +66,23 @@ self.addEventListener('install', function(event) {
     );
   });
   
-  self.addEventListener('push', function (event) {
-    var data = JSON.parse(event.data.text());
-  
-    event.waitUntil(
-        registration.showNotification(data.title, {
-            body: data.message,
-            icon: "/images/contoso.jpg"
-        })
-    );
-  });
+self.addEventListener('push', function (event) {
+  var data = JSON.parse(event.data.text());
+
+  event.waitUntil(
+      registration.showNotification(data.title, {
+          body: data.message,
+          icon: "/images/contoso.jpg"
+      })
+  );
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  var notification = event.notification;
+  var title = notification.title;
+  var message = notification.body;
+
+  event.waitUntil(clients.openWindow('notifications.html?title='+title+'&message='+message));
+});
+
