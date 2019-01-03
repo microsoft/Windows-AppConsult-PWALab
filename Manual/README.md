@@ -204,7 +204,7 @@ The default browser of the computer will be opened directly on the website which
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
 ___
-## Exercice 1 - Adding a Manifest to the website
+## Exercise 1 - Adding a Manifest to the website
 
 The Contoso Dashboard website is built on [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML5, CSS and JavaScript.
 
@@ -224,7 +224,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 ![Downloaded file in Chrome](SourceCodeDownloaded.png)
 
-4.  In the opened zip file, go to the **\Lab\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
+4.  In the opened zip file, go to the **\Lab\Exercise1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
 5.  Paste these files in the local *"C:\PWALab"* you've just created. 
 6.	Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
@@ -666,6 +666,8 @@ As such, we can change the function which interacts with the REST API to leverag
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
 
 ## Exercise 3 - Adding push notifications
+
+### Introduction
 One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
 
 Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
@@ -684,13 +686,13 @@ The solution is to use Web Push notifications, which are based on two standard W
 
 Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
 
-## Exercise 3 - Adding push notifications
+### Objectives
 In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
 - The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
 - A backend, which will be used by the Contoso Dashboard to handle subscription channels. We're going to build a Web API with .NET Core, which will provide the various endpoints to store a new channel, send a push notification, etc.
 
-There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It will list all the registered channels and it will provide a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder **Exercise 3/Start/Contoso.PushServer**.
+There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It will list all the registered channels and it will provide a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder **Exercise3/Start/Contoso.PushServer**.
 
 ### Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -712,7 +714,7 @@ In case of web notifications, this is how a typical JSON payload looks like:
 However, the browser isn't able to display push notifications on its own like, for example, Windows 10 can do when an application receives a toast notification. We have to listen for incoming notifications in our web application and use the information in the incoming JSON to visually render it.
 We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
 
-**Please note**. If you have finished Exercise 2, you can use the outcome as starting point. Otherwise, you can use the website included in the folder **Exercise 3/Start/Contoso.Dashboard**.
+**Please note**. If you have finished Exercise 2, you can use the outcome as starting point. Otherwise, you can use the website included in the folder **Exercise3/Start/Contoso.Dashboard**.
 
 1. Open the folder which contains the website in Visual Studio Code.
 2. Select the **sw.js** file in the Explorer panel on the left.
@@ -762,7 +764,7 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
 
 
 1. Open Visual Studio Code.
-2. Choose **File -> Open Folder** and look for the folder **Exercise 3/Start/Contoso.WebAPI** in the location where you have unzipped the lab material.
+2. Choose **File -> Open Folder** and look for the folder **Exercise3/Start/Contoso.WebAPI** in the location where you have unzipped the lab material.
 2. Right click on an empty space and choose **Open with Visual Studio Code**.
 3. You will find a class called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
 4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
@@ -971,7 +973,7 @@ The implementation is now complete. We are ready to test it!
 
     ![](logpushalreadyexist.png)
     
-10. Now we can check if the subscription has been properly stored in the database. Open the folder **Exercise 3/Start/Contoso.PushServer** in File Explorer.
+10. Now we can check if the subscription has been properly stored in the database. Open the folder **Exercise3/Start/Contoso.PushServer** in File Explorer.
 11. Choose **File**, then **Open Windows PowerShell**.
 12. Type the following command:
     
@@ -1067,7 +1069,7 @@ That's it. Now that we have our new endpoint, the **Send** button in the Contoso
 2. Move to the Debug section of the editor
 3. Choose **.NET Core Launch (web)**
 4. Wait for the project to compile and run. As before, the Web API will listen to the URL **http://localhost:5000**
-5. If you're coming from the previous task, the Contoso Backend website should already be up & running. Otherwise, open the **Exercise 3/Start/Contoso.PushServer** folder in File Explorer. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
+5. If you're coming from the previous task, the Contoso Backend website should already be up & running. Otherwise, open the **Exercise3/Start/Contoso.PushServer** folder in File Explorer. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
 6. Once the website has been loaded, press the **Send** button near one of the channels you have previously subscribed.
 7. You should see a notification appearing in the lower left corner of the screen and, after a few seconds, it should move to the Action Center in Windows 10.
 8. If you want to test that service workers are indeed able to work also in background, make sure that you don't have any instance of Edge running, then hit the **Send** button near the subscription you have registered in Edge in the previous task (it's the one with the channel URI that starts with https://db5p.notify.windows.com). 
@@ -1099,7 +1101,7 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
 4. Now we're ready to test our work. In case the web server isn't still running from the previous tasks, press the **Go Live** button in the bottom bar of Visual Studio Code.
 5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you have already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
-7. Now open the Contoso Backend website. If it's still not running from the previous task, open the **Exercise 3/Start/Contoso.PushServer** folder in File Explorer. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
+7. Now open the Contoso Backend website. If it's still not running from the previous task, open the **Exercise3/Start/Contoso.PushServer** folder in File Explorer. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
 6. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
 7. A notification will be displayed in the lower left corner of your screen. Click on it.
 8. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
