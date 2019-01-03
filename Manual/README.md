@@ -204,7 +204,7 @@ The default browser of the computer will be opened directly on the website which
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
 ___
-## Exercice 1 - Adding a Manifest to the website
+## Exercise 1 - Adding a Manifest to the website
 
 The Contoso Dashboard website is built on [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML5, CSS and JavaScript.
 
@@ -662,12 +662,33 @@ As such, we can change the function which interacts with the REST API to leverag
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
 
 ## Exercise 3 - Adding push notifications
-In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web  App to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
+
+### Introduction
+One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
+
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+
+In a typical notification scenario, we have 3 actors involved:
+
+- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
+- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+
+However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
+The solution is to use Web Push notifications, which are based on two standard W3C features: 
+
+- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
+- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
+
+Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
+
+### Objectives
+In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web App to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
 - The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
 - A backend, which will be used by the Contoso Dashboard to handle subscription channels. We're going to build a Web API with .NET Core, which will provide the various endpoints to store a new channel, send a push notification, etc.
 
-There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It will list all the registered channels and it will provide a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder **Lab/Exercise 3/Start/Contoso.PushServer**.
+There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder *"Lab/Exercise 3/Start/Contoso.PushServer"*.
 
 ### Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -688,8 +709,6 @@ In case of web notifications, this is how a typical JSON payload looks like:
 
 However, the browser isn't able to display push notifications on its own like, for example, Windows 10 can do when an application receives a toast notification. We have to listen for incoming notifications in our web application and use the information in the incoming JSON to visually render it.
 We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
-
-**Please note**. If you have finished Exercise 2, you can use the outcome as starting point. Otherwise, you can use the website included in the folder **Lab/Exercise 3/Start/Contoso.Dashboard**.
 
 1. Open Visual Studio Code. Choose **File -> Open folder** and select the folder *"Lab/Exercise 3/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file at the beginning of the lab (it should be *"C:\PWALab"*).
 2. Select the **sw.js** file in the Explorer panel on the left.
@@ -1076,9 +1095,9 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
 5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you have already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 7. Now open the Contoso Backend website. If it's still not running from the previous task, open in File Explorer the *"Lab/Exercise 3/Start/Contoso.PushServer"* folder from the location where you have unzipped the lab content (it should be *"C:\PWALab"*). Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
-6. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
-7. A notification will be displayed in the lower left corner of your screen. Click on it.
-8. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
+8. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
+9. A notification will be displayed in the lower left corner of your screen. Click on it.
+10. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
 
     ![](contosonotification.png)
 
