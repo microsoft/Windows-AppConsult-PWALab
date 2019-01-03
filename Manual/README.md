@@ -22,9 +22,9 @@
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add a manifest to the website, which is a JSON file that describes it. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
-2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the Service Worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
-3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will to receive notifications from a backend even when the browser is closed.
+1. In the first exercise you will add a manifest to the website: This is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
+2. In the second exercise you will add a service worker which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the service worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
+3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
 
 All the content of the exercises is stored inside a zip file that you can download from [add the link here].
 Unpack it in a folder of your choice on your computer before starting the lab.
@@ -37,10 +37,7 @@ For each exercise, you will find:
 However, if you properly follow all the steps, you can start every exercise with the outcome of the work you did for the previous one.
 
 ### Computers in this lab
-This lab uses a single Virtual Machine to provide you with the development environment. The VM settings are reported in the table below. Before you begin the lab, please make sure the VM is started and you are logged on to using the credentials provided below. 
-
-- **Username**: 
-- **Password**:
+This lab uses a single Virtual Machine to provide you with the development environment.
 
 The virtual machine is based on Windows 10 October Update (1809) and it includes:
 - Visual Studio 2017
@@ -50,23 +47,28 @@ The virtual machine is based on Windows 10 October Update (1809) and it includes
 If you already have these tools on your computer, feel free to directly use it for the lab instead of the virtual machine. Visual Studio and Visual Studio Code are mutually exclusive. The guidance included in this lab will be focused on Visual Studio Code, but the same tasks can be achieved also with Visual Studio 2017 if you prefer.
 
 ### Scenario
-Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all the activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
-The website is already built using the most recent best practices around web development: it's based on HTML5, JavaScript and CSS and it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine or a mobile phone.
+Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
+The website is already built using the most recent best practices around web development: it's based on HTML5, JavaScript and CSS ; it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine, a tablet or a smartphone.
 
-The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide  offline capabilities, so that the critical information provided by the dashboard can be accessed even when the Internet connection is missing.
+The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide offline capabilities. This way, the last updated critical information provided by the dashboard can be accessed even when the Internet connection is missing.
 
 ### The project
 The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. The websiste is based on a customization of the free [SB Admin template](https://startbootstrap.com/template-overviews/sb-admin/). It doesn't have a server-side component. The whole project runs client side and it's based only on HTML, CSS and JavaScript.
 The information displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
+
 
 ### Key concepts that will be used during the lab
 
 **Please note**. The following information are provided in case you're planning to follow this lab on your own or from home. If you are following this lab as part of a live training class, feel free to skip it and jump directly to the beginning of the first exercise. These concepts, in fact, should have already be explained by the trainers of the lab before starting the practical exercises.
 
 #### Service Workers
-In the typical web workflow, when you visit a website there's a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server, which replies back with the requested resources.
+In the typical web workflow, when you visit a website, there is a direct communication between the browser and Internet. The browser sends a bunch of HTTP requests to the server which replies back with the requested resources.
 
-Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the caching strategy we want to implement. We can forward the request directly to the server and then cache it; we can send the request to the cache and, only if it's missing, forward it to the server. During this lab we'll explore different caching techniques that can be implemented with a service worker.
+Service workers are a separate process, hosted by a JavaScript file, which can be installed by a website. In this scenario, the service worker is injected as a middle man between the browser and Internet. When the browser performs a HTTP request, it isn't directly sent to the server but it's intercepted first by the service worker. At this point, the service worker has the opportunity to perform different operations, based on the caching strategy we want to implement:
+- We can forward the request directly to the server and then cache it
+- We can try to get the resource from the cache and, only if it's missing, forward the request to the server.
+
+During this lab we'll explore different caching techniques that can be implemented with a service worker.
 
 ![](serviceworkers.png)
 
@@ -123,7 +125,7 @@ Since the **then()** method returns another promise, it's easy to chain multiple
 We're going to heavily use promises during the lab, since all the APIs exposed by the service worker are based on this approach.
 
 #### Fetch APIs
-We have already seen this API in action talking about Promises. Fetch is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
+We have already seen this API in action talking about Promises. **Fetch** is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
 
 The basic usage is quite straightforward. You pass to the **fetch()** method the URL of the resource you want to access: by default, it will perform a HTTP GET against it. After that, you use the **then()** function to specify the tasks to perform when the operation is completed; alternatively, you can also add a **catch()** statement to intercept any error that might happen and handle it.
 
@@ -155,12 +157,12 @@ In this scenario we're setting up a HTTP POST request and we're specifying its h
 The fetch concept is important also when it comes to implement offline scenarios. The service worker, in fact, is able to intercept all the fetch operations performed by the website, either explicit (you call the **fetch()** method to communicate with a web service) or implicit (the browser automatically downloads a set of HTML, JavaScript and CSS resources when the website is loaded). This is a key requirement to implement offline scenarios, since it will allow us to intercept all the network operations and cache them, based on the technique we have decided to adopt.
 
 #### Cache APIs
-The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specific Request / Responses object pairs. This is how caching implemented using these APIs looks like:
+The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specific Request / Response object pairs. This is how caching implemented with these APIs looks like:
 
 ![](CachingPreview.png)
 
 For each request, the Cache interface stores all the information about the HTTP request. The key identifier is the path of the resource, while the associated value is the full HTTP response, including the content.
-This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, etc.
+This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, an image, etc.
 
 We're going to leverage the cache APIs in the service worker, in combination with the fetch ones. If the fetch operation fails, we're going to return the response from the cache instead than the server. However, cache APIs can be leveraged also directly from the web pages if you need to implement more complex scenarios. For example, to make the website more responsive, you could immediately load some data from the cache directly inside the page and, only later, update it with the response coming from the network.
 
@@ -192,7 +194,7 @@ Push notifications are tightly coupled with a concept we've already seen: servic
 ### The tools
 For this lab we're going to use [Visual Studio Code](https://code.visualstudio.com/), the popular open source and cross-platform code editor. We will use it to edit the website and to add the code required to implement the various features which will turn your website into a Progressive Web App. However, if you prefer, you can use also Visual Studio 2017.
 
-Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quicly spin a web server to host web applications. Thanks to this extension, we'll be able to quickly test the changes we're going to make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
+Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quickly spin a web server to host web applications. Thanks to this extension, we'll be able to immediately test the changes we make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
 Using this extension is very easy. Just open in Visual Studio Code the folder which contains the website and press the **Go Live** button highlighted in the image below:
 
 ![](golive.png)
@@ -201,6 +203,114 @@ The default browser of the computer will be opened directly on the website which
 
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
+___
+## Exercice 1 - Adding a Manifest to the website
+
+The Contoso Dashboard website is built on [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML5, CSS and JavaScript.
+
+The project was initiated using the <a href="https://startbootstrap.com/template-overviews/sb-admin/" target="_blank">SB Admin template</a>:
+
+![Contoso Dashboard website screen capture](ContosoDashboardWebsiteCapture.png)
+
+We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
+
+Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding a web standard file which is the **Web app manifest**. The manifest will define the features of the app such as name, icon, splash screen, theme colors and so on. 
+
+### Task 1 - Setup the Contoso Dashboard website locally
+Let's first be sure we can run and debug the Contoso Dashboard website locally.
+1. In the Windows Explorer, create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
+2. In order to get the source code of the Contoso Dashboard customized website, go to <a href="https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/" target="_blank">Windows AppConsult PWALab repository</a>. Click on the **releases** tab and donwload the latest release.
+3.  When ready, click on the downloaded file in your browser to open it.
+
+![Downloaded file in Chrome](SourceCodeDownloaded.png)
+
+4.  In the opened zip file, go to the **\Lab\Exercice1\Start** folder and copy (to the clipboard with CTRL+C) all contained files.
+5.  Paste these files in the local *"C:\PWALab"* you've just created. 
+6.	Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
+
+![](OpenFolder.png)
+
+7.	Select the *"C:\PWALab"* folder.
+8.	Select the **index.html** file from the Explorer panel on the left.
+9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
+10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5050**.
+
+You are ready to work on the code!
+
+### Task 2 - Create the Manifest
+The Web App Manifest is beeing defined by the W3C; The <a href="https://www.w3.org/TR/appmanifest/" target="_blank">specification</a> is still in progress. Nevertheless, a good schema's description can be found at <a href="http://json.schemastore.org/web-manifest" target="_blank">http://json.schemastore.org/web-manifest</a>.
+
+Basiquely, the manifest is JSON-formatted file describing key information about the app. Here are the main elements:
+- **name** - Long name of the application.
+- **short_name** - Shortest name of the application.
+- **start_url** - Url requested for the main page when the app starts.
+- **description** - Purpose and description of the application.
+- **scope** - Navigation scope of the application. If the user navigates outside this 'scope', the web page will be opened in the Web browser outside the application. The scope value is a relative url like `/PWAApp/`.
+- **icons** - Array of different sized icons that will be used in the different OS's contexts. For exemple: App icon in the applications' list, App icon in the taskbar if any, App icon in the Store, etc.
+- **background_color** - Expected background of the application.
+- **theme_color** - Default theme color for the application.
+- **orientation** - Default orientation requested for the application.
+- **display** - Prefered display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
+
+You can refer to https://developer.mozilla.org/en-US/docs/Web/Manifest for further details.
+
+Let's add a manifest to the Contose Dashboard website:
+1. Within Visual Studio Code, in the Explorer panel (on the left), click on the **New File** button.
+
+![](newfileButton.png)
+
+2. Name it *"manifest.json"* ![](ManifestJson.png)
+3. Copy/Paste the following json as the content: 
+
+```json
+{
+  "$schema": "http://json.schemastore.org/web-manifest",
+  "short_name": "ContosoBoard",
+  "name": "Contoso Dashboard",
+  "description": "The Contoso Dashboard keeps track of all activities that are happening inside the company",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "Contoso96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "Contoso192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#FFFFFF",
+  "theme_color": "#409E8E",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any"
+}
+```
+
+Some explanations: 
+- The scope is defined to `/` so that all navigation within the Contoso website will be displayed inside the application.
+- We provide 2 icons. One with the 96x96 pixels dimension with the logo only and another one 192x192 sized with logo and Company name.
+- The background color is white ; Theme color is green/gray (the one of the Contoso logo).
+- The start url is the website default page.
+- Standalone's display we make the app look and feel the same as a classic app.
+
+### Task 3 - Add the manifest to the website
+In order to add the manifest to the Contoso Dashboard website, we just add a `<link>` element in the default page. Here are the steps:
+1. Using Visual Studio Code, open the **index.html** file.
+2. Inside the `<head>` element and just before the `<title>` element add the following tag:
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
+
+As you noticed, in the previous task, we use 2 icons. These icons were already created and put for you at the website root.
+
+### Task 4 - Install the PWA
+TODO
+
+___
 ## Exercise 2 - Adding offline capabilities
 One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
 
@@ -554,6 +664,25 @@ As such, we can change the function which interacts with the REST API to leverag
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
+
+## Exercise 3 - Adding push notifications
+One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
+
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+
+In a typical notification scenario, we have 3 actors involved:
+
+- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
+- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+
+However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
+The solution is to use Web Push notifications, which are based on two standard W3C features: 
+
+- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
+- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
+
+Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
 
 ## Exercise 3 - Adding push notifications
 In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
@@ -978,37 +1107,3 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
     ![](contosonotification.png)
 
 This was just a basic example on how to handle the activation of a push notification. You can also implement more advanced strategies, like using custom actions (as explained [in this article](https://developers.google.com/web/fundamentals/push-notifications/notification-behaviour)) or using the **focus()** method to reuse an existing instance of the browser if it's already opened (as explained [in this article](https://developer.mozilla.org/en-US/docs/Web/API/WindowClient/focus).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
