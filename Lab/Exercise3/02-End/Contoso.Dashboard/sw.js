@@ -56,7 +56,7 @@ self.addEventListener('push', function (event) {
   event.waitUntil(
       registration.showNotification(data.title, {
           body: data.message,
-          icon: "/images/contoso.jpg"
+          icon: "/images/contoso.png"
       })
   );
 });

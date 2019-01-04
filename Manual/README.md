@@ -721,7 +721,7 @@ We're going to do this operation in the service worker since, as already explain
       event.waitUntil(
           registration.showNotification(data.title, {
               body: data.message,
-              icon: "/images/contoso.jpg"
+              icon: "/images/contoso.png"
           })
       );
     });
@@ -929,7 +929,7 @@ Now that we have verified that we have all the endpoints we need, we can impleme
     
     ![](notificationspermissions.png)
     
-    Using a promise, we get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
+    Through a promise we get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
     c. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
     d. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
     
