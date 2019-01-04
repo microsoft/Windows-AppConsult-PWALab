@@ -880,52 +880,63 @@ Now that we have verified that we have all the endpoints we need, we can impleme
 
     ```javascript
     navigator.serviceWorker.ready.then(function(reg) {
-      reg.pushManager.getSubscription()
-        .then(function (subscription) {
-          if (subscription) {
-              console.log('Push subscription already exists');
-              return subscription;
-          }
-          else {
-            console.log('Push subscription does not exist. We will request a new one');
-            fetch('http://localhost:5000/api/push/key')
-            .then(function(response) {
-              response.json()
-              .then(function(data) {
-                reg.pushManager.subscribe({
-                  userVisibleOnly: true,
-                  applicationServerKey: urlBase64ToUint8Array(data)
-                })
-                .then(function (subscription) {
-                  fetch('http://localhost:5000/api/push/channel', {
-                        method: 'post',
-                        headers: { 'Content-type': 'application/json' },
-                        body: JSON.stringify({ subscription: subscription })
-                  }).then(function (result) {
-                      console.log('The push subscription has been stored succesfully');
-                  })
-                  .catch(function (error) {
-                      console.log(error);
+        Notification.requestPermission(function (result) {
+          if (result === 'granted') {
+            reg.pushManager.getSubscription()
+            .then(function (subscription) {
+              if (subscription) {
+                  console.log('Push subscription already exists');
+                  return subscription;
+              }
+              else {
+                console.log('Push subscription does not exist. We will request a new one');
+                fetch('http://localhost:5000/api/push/key')
+                .then(function(response) {
+                  response.json()
+                  .then(function(data) {
+                    reg.pushManager.subscribe({
+                      userVisibleOnly: true,
+                      applicationServerKey: urlBase64ToUint8Array(data)
+                    })
+                    .then(function (subscription) {
+                      fetch('http://localhost:5000/api/push/channel', {
+                            method: 'post',
+                            headers: { 'Content-type': 'application/json' },
+                            body: JSON.stringify({ subscription: subscription })
+                      }).then(function (result) {
+                          console.log('The push subscription has been stored succesfully');
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
                   });
                 });
               });
-            });
-          }
-        });
+            }
+          });
+        }
+        else {
+          console.log('You don\'t have permissions to send push notifications');
+        }
+      });
     });
     ```
 
- 
     This snippet is made by different promises chained together. Let's analyze in the detail the workflow:
     
     a. Before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we append the execution of our function to the **ready** event exposed by the service worker. Then we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
-    b. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
-    c. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
+    b. The next step is to ask the permission to send push notifications. We do this by calling the **Notification.requestPermission()** method, which triggers the request from the browser:
+    
+    ![](notificationspermissions.png)
+    
+    Using a promise, we get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
+    c. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
+    d. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
     
          - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, not all the browsers support this scenario for security reasons. For example, not setting this property or setting it to **false** will result in an error if you're using Chrome.
         - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
         
-    d. If the new subscription is registered successfully, we need to store in it in our backend. As such, we perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
+    e. If the new subscription is registered successfully, we need to store in it in our backend. As such, we perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
     
 4. Now copy and paste the following snippet at the end of the code:
     
