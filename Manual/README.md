@@ -31,8 +31,8 @@ Unpack it in a folder of your choice on your computer before starting the lab.
 
 For each exercise, you will find:
 
-- A **Start** folder, which is the starting point
-- An **End** folder, which is the final outcome of the exercise, in case you get stuck and you can't complete it
+- A **Start** folder, which is the starting point.
+- An **End** folder, which is the final outcome of the exercise, in case you get stuck and you can't complete it.
 
 However, if you properly follow all the steps, you can start every exercise with the outcome of the work you did for the previous one.
 
@@ -199,7 +199,7 @@ Using this extension is very easy. Just open in Visual Studio Code the folder wh
 
 ![](golive.png)
 
-The default browser of the computer will be opened directly on the website which, by default, will be hosted on the 5050 port of your local machine. 
+The default browser of the computer will be opened directly on the website which, by default, will be hosted on the 5500 port of your local machine. 
 
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
@@ -233,7 +233,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 7.	Select the *"C:\PWALab"* folder.
 8.	Select the **index.html** file from the Explorer panel on the left.
 9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
-10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5050**.
+10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5500**.
 
 You are ready to work on the code!
 
@@ -314,13 +314,13 @@ ___
 ## Exercise 2 - Adding offline capabilities
 One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
 
-The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we phisically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
+The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we physically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
 
-1.	Open Visual Studio Code and choose Open folder.
+1.	Open Visual Studio Code and choose **Open folder**.
 2.	Select the folder *"Lab/Exercise2/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file of the lab (it should be *"C:\PWALab"*)
 3.	Select the **index.html** file from the Explorer panel on the left
 4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5050**. Notice that the website is loading properly, since the connection is active.
+5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5500**. Notice that the website is loading properly, since the connection is active.
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
@@ -346,20 +346,20 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
       });
     ```
     
-    We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation. This way, the browser won't try to handle it, but it will be up to us to do it. However, in this case we are behaving like the browser, so we simply invoke the **fetch()** method passing, as parameter, the original request. This way, it will simply be forwarded to the server.
+    We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation. This way, the browser won't try to handle it, but it will be up to us to do it. However, in this case we are behaving like the browser ; so we simply invoke the **fetch()** method passing, as parameter, the original request. This way, it will simply be forwarded to the server.
 
 4.	Now expand the **js** folder in the Explorer panel and press again the **New file** button. Name it **sb-pwa.js**. This is the file where we're going to implement all the logic to register the service worker.
 5.	Copy and paste the following code snippet:
 
     ```javascript
     if (navigator.serviceWorker.controller) {
-      console.log('[PWA Builder] active service worker found, no need to register');
+      console.log('[PWA Builder] Active service worker found, no need to register');
     } else {
       //Register the ServiceWorker
       navigator.serviceWorker.register('sw.js', {
         scope: './'
       }).then(function(reg) {
-        console.log('Service worker has been registered for scope:'+ reg.scope);    
+        console.log('[PWA Builder] Service worker has been registered for scope: '+ reg.scope);    
       });
     }
     ```
@@ -374,11 +374,11 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 <script src="js/sb-pwa.js"></script>
 ```
 
-That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5050** in Chrome and press F12 to enable the developer tools. Move to the **Application** tab and you should see something like this:
+That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. Move to the **Application** tab and you should see something like this:
 
 ![](serviceworkerinstalled.png)
 
-The service worker has been properly installed and it’s up and running. We can verify that it's indeed acting as a middle man between the browser and the server by moving to the **Network** tab and reloading the page. You will notice that all the request will be coming from the service worker and not directly from the server:
+The service worker has been properly installed and it’s up and running. We can verify that it's indeed acting as a middle man between the browser and the server by moving to the **Network** tab and reloading the page. You will notice that all the requests will be coming from the service worker and not directly from the server:
 
 ![](networkserviceworker.png)
 
@@ -444,7 +444,7 @@ Let’s define a new function to cache these pages inside the service worker:
     
     This code uses the cache APIs to open the cache we have created for our application, by using the **open()** method exposed by the **caches** object. The name of the cache doesn’t have to follow a specific naming convention, you can use the one you prefer. In our case, we're using **pwabuilder-offline**. This method will create the cache if it doesn't exist, so it's safe to call it even if it's the first time the web application is opened. When the operation is completed with success, we can move on and store some pages using the **addAll()** method, passing as parameter an array of strings with the list of pages we want to include in the cache.
     
-3.	The next step is to invoke the above function as soon as the service worker is installed. We can use one of the events exposed by the service worker, called **install**. Copy and paste the follow snippet before the **preLoad()** function:
+3.	The next step is to invoke the above function as soon as the service worker is installed. We can use one of the events exposed by the service worker, called **install**. Copy and paste the follow snippet before the **preLoad()** function at the beginning of the **sw.js** file:
 
     ```javascript
     self.addEventListener('install', function(event) {
@@ -456,7 +456,7 @@ Let’s define a new function to cache these pages inside the service worker:
 
 4.	Now return to Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 5.	Move to the **Application** tab and press **Unregister** button near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
+6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
 9.	Notice how, despite you have visited only the main page of the website (**index.html**), also other pages have been cached:
@@ -497,9 +497,9 @@ We need to change the current handler of the **fetch** event in a way that, if t
 
 It's now time to test the code:
 
-1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. 
+1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. If you are still offline (with the developers tools), just switch online and refresh the page.
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page because without a valide connection, the browser will not be automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and make sure to select the **Service Workers** tab. 
 6. Check the **Offline** option.
@@ -511,7 +511,7 @@ Compared to the previous tests, this time we're indeed getting something back an
 
 > Can you guess why we are seeing a broken page?
 
-When we have registered the Service Worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files; by scripts stored in JavaScript files; etc. However, none of them has been added in the cache.
+When we have registered the Service Worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files, by scripts stored in JavaScript files, etc. However, none of them has been added in the cache.
 
 We can verify that this is indeed the case with the developer tools. Move to the **Network** tab. You will notice how the **index.html** is indeed being returned by the Service Worker, while all the other requests are failing:
 
@@ -567,7 +567,7 @@ Let's test the new behavior.
 
 1. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5050**
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and expand the **Cache Storage** element in the left panel
 6. Click on the available cache, named **pwabuilder-offline**.
@@ -606,7 +606,7 @@ The information displayed in these boxes is retrieved from a REST service expose
 
     By using the **fetch()** method we connect to the REST service, we download its content, we parse it as a JSON and we extract the total number of messages (which is stored in the **count** property). By using the jQuery syntax, we update the content of the box with id **messages** to display the returned value.
     
-3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
+3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL **http://127.0.0.1:5500** in the address bar and open it.
 4. Press F12 to turn the developer tools and move to the **Application** tab.
 5. Expand the **Cache Storage** section in the left panel and click on the available cache, which name is **pwabuilder-offline**.
 6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
@@ -656,7 +656,7 @@ As such, we can change the function which interacts with the REST API to leverag
     ```
     
     Before performing the fetch operation to retrieve the data from the REST service, we open the cache and we look if we have already previously cached the request. The main difference compared to the code we have written in the service worker is that, this time, we aren't generically handling all the requests, but only a specific one: the one which responds to the **/api/messages** endpoint of our REST service. If that's the case, we parse the JSON and we immediately display the value in the box in the page (the one identified by the **messages** id). Once we have performed the operation, the rest of the code is the same as before and it downloads a fresh copy of the data from the web service.
-4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5050** in the address bar and open it.
+4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5500** in the address bar and open it.
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
@@ -732,7 +732,7 @@ We're going to do this operation in the service worker since, as already explain
 This is all the code we need to handle incoming push notifications. Chrome gives us the opportunity to test the implementation thanks to the developer tools.
 
 1. In case the web server isn't running, press the **Go live** button in the bottom task bar of Visual Studio Code
-2. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
+2. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
 3. Press F12 to open the developer tools. If you are using a instance of the browser you already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 4. In the developer tools, click on **Application**, then choose **Service Workers**.
 5. Notice that, in the center, there's a **Push** field under the information about the service worker.
@@ -955,7 +955,7 @@ The implementation is now complete. We are ready to test it!
 2. Move to the Debug section of Visual Studio Code and choose **.NET Core Launch (web)**.
 3. After a few seconds, the Web API will start and it will listen to the URL **http://localhost:5000**.
 4. Now go back to the Visual Studio Code instance with the Contoso Dashboard web application. If it isn't already running, press the **Go live** button in the taskbar to start the web server.
-5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
+5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 7. Move to the **Console** section of the developer tools.
 8. If you did everything correctly, you should see in the log the following two messages:
@@ -1092,7 +1092,7 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
     In the end, we call the **clients.openWindow()** method specifying a page of our web application which is dedicated to handle notifications (**notifications.html**) and adding, as query string parameters, the title and the message of the page. We wrap this method inside the **event.waitUntil()** function to make sure the service worker doesn't get terminated by the browser before we have completed our task.
     
 4. Now we're ready to test our work. In case the web server isn't still running from the previous tasks, press the **Go Live** button in the bottom bar of Visual Studio Code.
-5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5050** in the address bar.
+5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you have already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 7. Now open the Contoso Backend website. If it's still not running from the previous task, open in File Explorer the *"Lab/Exercise 3/Start/Contoso.PushServer"* folder from the location where you have unzipped the lab content (it should be *"C:\PWALab"*). Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
 8. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
