@@ -522,7 +522,7 @@ A way to solve this problem would be to update the service worker initialization
 ### Task 3 - Enable cache at request time
 In the previous task we have intercepted the **fetch** event to handle caching. However, we were focused only in reading from the cache. If the current request couldn't be satisfied because the Internet connection was missing, we tried to read it from the cache.
 
-However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that are downloaded while the user browses the web application.
+However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that were downloaded while the user browsed the web application.
 
 1. Open the **sw.js** file in Visual Studio Code
 2. Look for the function which handles the **fetch** event we have created in task 2 and delete it.
@@ -567,7 +567,7 @@ Let's test the new behavior.
 
 1. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. To be sure that the website is reloaded, press CTRL+F5.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and expand the **Cache Storage** element in the left panel
 6. Click on the available cache, named **pwabuilder-offline**.
@@ -653,6 +653,7 @@ As such, we can change the function which interacts with the REST API to leverag
         .then(function (data) {
           $('#messages').html(data.count + " New Messages!");
         });
+      }); 
     ```
     
     Before performing the fetch operation to retrieve the data from the REST service, we open the cache and we look if we have already previously cached the request. The main difference compared to the code we have written in the service worker is that, this time, we aren't generically handling all the requests, but only a specific one: the one which responds to the **/api/messages** endpoint of our REST service. If that's the case, we parse the JSON and we immediately display the value in the box in the page (the one identified by the **messages** id). Once we have performed the operation, the rest of the code is the same as before and it downloads a fresh copy of the data from the web service.
