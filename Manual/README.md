@@ -18,15 +18,16 @@
 
 - Good knowledge of HTML and JavaScript
 - Basic knowledge of C#
+- Basic knowledge of .NET Core Web API
 
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add a manifest to the website: This is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
-2. In the second exercise you will add a service worker which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the service worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
+1. In the first exercise you will add a manifest to the website. It's a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser.
+2. In the second exercise you will add a service worker, which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website. Thanks to the service worker, you’ll be able to implement different caching techniques, which will allow the website to be used also when you’re offline.
 3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
 
-All the content of the exercises is stored inside a zip file that you can download from [add the link here].
+All the content of the exercises is stored inside a zip file that you can download from **[add the link here]**.
 Unpack it in a folder of your choice on your computer before starting the lab.
 
 For each exercise, you will find:
