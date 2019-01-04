@@ -5,6 +5,6 @@ if (navigator.serviceWorker.controller) {
   navigator.serviceWorker.register('sw.js', {
     scope: './'
   }).then(function(reg) {
-    console.log('[PWALab] Service worker has been registered for scope: '+ reg.scope);    
+    console.log('[PWALab] Service worker has been registered for scope: ' + reg.scope);    
   });
 }

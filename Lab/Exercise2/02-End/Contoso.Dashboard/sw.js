@@ -4,9 +4,9 @@ self.addEventListener('install', function(event) {
   });
 
   var preLoad = function(){
-    console.log('[PWALab] Install Event processing');
+    console.log('[PWA Builder] Install Event processing');
     return caches.open('pwabuilder-offline').then(function(cache) {
-      console.log('[PWALab] Cached index and offline page during Install');
+      console.log('[PWA Builde] Cached index and offline page during Install');
       return cache.addAll(
         [
           '/index.html', 
@@ -23,7 +23,7 @@ self.addEventListener('install', function(event) {
     var updateCache = function(request){
       return caches.open('pwabuilder-offline').then(function (cache) {
         return fetch(request).then(function (response) {
-          console.log('[PWALab] add page to offline ' + response.url);
+          console.log('[PWA Builder] add page to offline ' + response.url);
           return cache.put(request, response);
         });
       });
@@ -33,7 +33,7 @@ self.addEventListener('install', function(event) {
   
     event.respondWith(
       fetch(event.request).catch(function(error) {
-        console.log( '[PWALab] Network request Failed. Serving content from cache: ' + error );
+        console.log( '[PWA Builder] Network request Failed. Serving content from cache: ' + error );
   
         //Check to see if you have it in the cache
         //Return response
