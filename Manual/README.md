@@ -665,21 +665,21 @@ If you want, you can complete the task by enabling this behavior also for the ot
 ## Exercise 3 - Adding push notifications
 
 ### Introduction
-One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
+One of the features mostly frequently adopted by mobile applications are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
 
-Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life on the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
 
 In a typical notification scenario, we have 3 actors involved:
 
-- The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
-- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
-- The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in am application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
+- The **client**, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
+- The **backend**, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The **push notification service**. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in an application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
 
 However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
 The solution is to use Web Push notifications, which are based on two standard W3C features: 
 
-- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
-- [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel, handling the incoming notifications, etc.
+- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications.
+- [Push APIs](https://www.w3.org/TR/push-api/), which are responsible of requesting a channel, handling the incoming notifications, etc.
 
 Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
 
@@ -689,7 +689,7 @@ In this exercise we're going to use the Push APIs and the Notification APIs to e
 - The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
 - A backend, which will be used by the Contoso Dashboard to handle subscription channels. We're going to build a Web API with .NET Core, which will provide the various endpoints to store a new channel, send a push notification, etc.
 
-There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder *"Lab/Exercise 3/Start/Contoso.PushServer"*.
+There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder *"Lab/Exercise3/01-Start/Contoso.PushServer"*.
 
 ### Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -711,7 +711,7 @@ In case of web notifications, this is how a typical JSON payload looks like:
 However, the browser isn't able to display push notifications on its own like, for example, Windows 10 can do when an application receives a toast notification. We have to listen for incoming notifications in our web application and use the information in the incoming JSON to visually render it.
 We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
 
-1. Open Visual Studio Code. Choose **File -> Open folder** and select the folder *"Lab/Exercise 3/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file at the beginning of the lab (it should be *"C:\PWALab"*).
+1. Open Visual Studio Code. Choose **File -> Open folder** and select the folder *"Lab/Exercise3/01-Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file at the beginning of the lab (it should be *"C:\PWALab"*).
 2. Select the **sw.js** file in the Explorer panel on the left.
 3. Add the following snippet at the end of the file:
 
@@ -752,19 +752,22 @@ This is all the code we need to handle incoming push notifications. Chrome gives
 
 The event we have registered in the service worker is working as expected. However, the current implementation isn't really useful. The notification is displayed only locally and when the website is up & running. In a real push notification scenario, we need to subscribe to a channel and to implement a backend to store them.
 
-This will be our goal in the next exercise.
+This will be our goal in the next tasks of this exercise.
 
 ### Task 2 - Setting up the backend
-As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints already implemented. 
+As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints implemented. 
 
 1. Open Visual Studio Code.
-2. Choose **File -> Open Folder** and look for the folder *"Lab/Exercise 3/Start/Contoso.WebAPI"* in the location where you have unzipped the lab material (it should be *"C:\PWALab"*).
+2. Choose **File -> Open Folder** and look for the folder *"Lab/Exercise3/01-Start/Contoso.WebAPI"* in the location where you have unzipped the lab material (it should be *"C:\PWALab"*).
 3. In the Explorer panel on the left you will find a file called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
 4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
 
-    ![](vscodedebug.png)
+    ![Debug button on the left side](vscodedebug.png)
     
 5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button.
+  
+    ![Play button for Debug](PlayButtonForDebug.png)
+    
 6. The Web API will be available at the URL **http://localhost:5000**. We will reuse this URL later when we're going to implement subscriptions in the Contoso Dashboard website.
 
 ### Task 3 - Configuring the authentication
