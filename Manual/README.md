@@ -221,14 +221,14 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 ![Downloaded file in Chrome](SourceCodeDownloaded.png)
 
-4.  In the opened zip file, go to the *"\Lab\Exercice1\Start"* folder and copy (to the clipboard with CTRL+C) all contained files.
-5.  Paste these files in the local *"C:\PWALab"* you've just created. 
-6.	Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
+4.  Open the zip file and extract all the content to your working folder *"C:\PWALab"* you've just created.
+
+5.  Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
 ![](OpenFolder.png)
 
-7.	Select the *"C:\PWALab"* folder.
-8.	Select the **index.html** file from the Explorer panel on the left.
+7.	Select the *"C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard"* folder.
+8.	In the explorer panel on the left of Visual Studio Code, select the **index.html** file.
 9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
 10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5500**.
 
