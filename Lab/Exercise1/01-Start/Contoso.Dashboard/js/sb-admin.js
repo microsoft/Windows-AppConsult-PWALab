@@ -1,6 +1,47 @@
 (function($) {
   "use strict"; // Start of use strict
 
+  $(document).ready(function() {
+
+    var baseUrl = 'https://ready2019-pwa.azurewebsites.net';
+
+    fetch(baseUrl + '/api/messages')
+    .then(json)
+    .then(function (data) {
+        $('#messages').html(data.count + " New Messages!");
+      });
+        
+    fetch(baseUrl + '/api/tasks')
+    .then(json)
+    .then(function (data) {
+      $('#tasks').html(data.count + " New Tasks!");
+    });
+
+    fetch(baseUrl + '/api/orders')
+    .then(json)
+    .then(function (data) {
+      $('#orders').html(data.count + " New Orders!");
+    });
+
+    fetch(baseUrl + '/api/tickets')
+    .then(json)
+    .then(function (data) {
+      $('#tickets').html(data.count + " New Tickets!");
+    });        
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var title = urlParams.get('title');
+    var message = urlParams.get('message');
+
+    $('#notificationTitle').html(title);
+    $('#notificationMessage').html(message);
+
+  });
+
+  function json(response) {
+    return response.json();
+  }
+
   // Toggle the side navigation
   $("#sidebarToggle").on('click',function(e) {
     e.preventDefault();
