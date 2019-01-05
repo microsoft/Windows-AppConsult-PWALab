@@ -321,7 +321,7 @@ The current web application doesn’t have any kind of offline capability. Since
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
-9.	Reload the website. Notice how the browser is returning an error because it can’t reach the server anymore.
+9.	Reload the website by pressing **CTRL+R**. Notice how the browser is returning an error because it can’t reach the server anymore.
 
 ![](nointernet.png)
 
@@ -340,7 +340,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
     ```javascript
     self.addEventListener('fetch', function (event) {
         event.respondWith(fetch(event.request));
-      });
+    });
     ```
     
     We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation. This way, the browser won't try to handle it, but it will be up to us to do it. However, in this case we are behaving like the browser ; so we simply invoke the **fetch()** method passing, as parameter, the original request. This way, it will simply be forwarded to the server.
@@ -371,7 +371,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 <script src="js/sb-pwa.js"></script>
 ```
 
-That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. Move to the **Application** tab and you should see something like this:
+That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. If you're using the previous instance of Chrome, make sure to uncheck the **Offline** option in the **Network** section. Move to the **Application** tab and you should see something like this:
 
 ![](serviceworkerinstalled.png)
 
@@ -446,7 +446,7 @@ Let’s define a new function to cache these pages inside the service worker:
     ```javascript
     self.addEventListener('install', function(event) {
         event.waitUntil(preLoad());
-      });
+    });
     ```
     
     The **waitUntil()** method exposed by the event APIs is used to tell to the browser that work is ongoing until the promise settles, and it shouldn't terminate the service worker if it wants that work to complete. This way the **preLoad()** function will be invoked as soon as the service worker is deployed and the caching operation won’t be aborted as long as it’s still running.
@@ -496,7 +496,7 @@ It's now time to test the code:
 
 1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. If you are still offline (with the developers tools), just switch online and refresh the page.
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page because without a valide connection, the browser will not be automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page becausem without a valid connection, the browser will not automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and make sure to select the **Service Workers** tab. 
 6. Check the **Offline** option.
@@ -564,7 +564,7 @@ Let's test the new behavior.
 
 1. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. To be sure that the website is reloaded, press CTRL+F5.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. To be sure that the website is reloaded, press **CTRL+R**.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and expand the **Cache Storage** element in the left panel
 6. Click on the available cache, named **pwabuilder-offline**.
