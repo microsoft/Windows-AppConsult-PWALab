@@ -85,7 +85,7 @@ function success() {
 }
 
 function error(err) {
-  console.log('Fetch Error :-S', err);
+  console.log('Fetch error', err);
 }
 
 var request = new XMLHttpRequest();
@@ -107,17 +107,15 @@ A **Promise** is an object representing the completion or failure of an asynchro
 
 ```javascript
 fetch('./api/data.json')
-  .then(
-    function(response) {
+.then(function(response) {
        // Examine the text in the response
       response.json().then(function(data) {
         console.log(data);
       });
-    }
-  )
-  .catch(function(err) {
+    })
+.catch(function(err) {
     console.log('Fetch error', err);
-  });
+});
 ```
 
 The actions that must be executed only when the operation is completed are specified inside the **then()** method. The error, instead, can be intercepted by adding a **catch()** statement.
@@ -126,21 +124,19 @@ Since the **then()** method returns another promise, it's easy to chain multiple
 We're going to heavily use promises during the lab, since all the APIs exposed by the service worker are based on this approach.
 
 #### Fetch APIs
-We have already seen this API in action talking about Promises. **Fetch** is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
+We have already seen this API in action talking about promises. **Fetch** is a new modern API to perform HTTP operations in JavaScript. Despite the name, these APIs can be used to perform any kind of HTTP requests, not only GET but also POST, PUT, DELETE, etc.
 
 The basic usage is quite straightforward. You pass to the **fetch()** method the URL of the resource you want to access: by default, it will perform a HTTP GET against it. After that, you use the **then()** function to specify the tasks to perform when the operation is completed; optionally, you can also add a **catch()** statement to intercept any error that might happen and handle it.
 
 ```javascript
 fetch('./api/data.json')
-  .then(
-    function(response) {
+.then(function(response) {
        //the operation is successfull
       });
-    }
-  )
-  .catch(function(err) {
+})
+.catch(function(err) {
     //the operation has failed
-  });
+});
 ```
 
 If you need to perform advanced operations, you have the opportunity to pass another parameter, after the URL, with more configuration options, as in the following sample:
@@ -365,7 +361,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
     }
     ```
 
-    This code first checks if a Service Worker is already registered, by checking if **navigator.serviceWorker.controller** exists. If that’s the case, we don’t have to do anything. Otherwise, we move on with the registration process by calling the **navigator.serviceWorker.register()** method, which requires two parameters:
+    This code first checks if a service worker is already registered, by checking if **navigator.serviceWorker.controller** exists. If that’s the case, we don’t have to do anything. Otherwise, we move on with the registration process by calling the **navigator.serviceWorker.register()** method, which requires two parameters:
     - The filename of the JavaScript file which will act as a service worker. The path should be relative to the root of the website. We specify the name of the file we have previously created, which is **sw.js**.
     - A set of additional parameters for the configuration. The key one is called **scope**, which specifies the resources the service worker will be able to access to. Since we want to handle the whole website, we have placed the sw.js file in the root and we specify **./** as scope. 
     The **register()** method is asynchronous and it’s based on the promises approach. As such, we can use the **then()** function to chain another operation which must be executed once the operation has been completed. In our case, we just log a message in the browser’s console.
@@ -456,7 +452,7 @@ Let’s define a new function to cache these pages inside the service worker:
     The **waitUntil()** method exposed by the event APIs is used to tell to the browser that work is ongoing until the promise settles, and it shouldn't terminate the service worker if it wants that work to complete. This way the **preLoad()** function will be invoked as soon as the service worker is deployed and the caching operation won’t be aborted as long as it’s still running.
 
 4.	Now return to Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
-5.	Move to the **Application** tab and press **Unregister** button near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
+5.	Move to the **Application** tab and press the **Unregister** button near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
 6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
@@ -512,7 +508,7 @@ Compared to the previous tests, this time we're indeed getting something back an
 
 > Can you guess why we are seeing a broken page?
 
-When we have registered the Service Worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files, by scripts stored in JavaScript files, etc. However, none of them has been added in the cache.
+When we have registered the service worker, we have cached only the HTML pages. However, the Contoso Dashboard application is composed also by styles defined in CSS files, by scripts stored in JavaScript files, etc. However, none of them has been added in the cache.
 
 We can verify that this is indeed the case with the developer tools. Move to the **Network** tab. You will notice how the **index.html** is indeed being returned by the Service Worker, while all the other requests are failing:
 
@@ -665,26 +661,6 @@ If you want, you can complete the task by enabling this behavior also for the ot
 
 ## Exercise 3 - Adding push notifications
 
-### Introduction
-One of the features mostly frequently adopted by mobile applications are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
-
-Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life on the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
-
-In a typical notification scenario, we have 3 actors involved:
-
-- The **client**, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend. Then it goes dormant waiting to receive notifications.
-- The **backend**, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
-- The **push notification service**. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implements an authentication process, in order to avoid that a random actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in an application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
-
-However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to implement a different backend for each desktop and mobile platform on the market would be quite expensive.
-The solution is to use Web Push notifications, which are based on two standard W3C features: 
-
-- [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications.
-- [Push APIs](https://www.w3.org/TR/push-api/), which are responsible of requesting a channel, handling the incoming notifications, etc.
-
-Being based on a standard definition, they are implemented by the latest version of all the major browser on the market.
-
-### Objectives
 In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web App to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
 - The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
@@ -747,7 +723,25 @@ This is all the code we need to handle incoming push notifications. Chrome gives
     ![](jsonpush.png)
 
 7. Press the **Push** button.
-8. If you have done everything correctly, the notification should pop up and then stored in the Action Center of Windows 10.
+8. Well, nothing will happen. Can you guess why? Browsers use a capability approach, like mobile applications, to handle the most critical features that a web application can use. Push notifications is one of them: the user must explictly consent to receive notifications from a website. We can force the request by using the **Notification** API.
+9. Go back to Visual Studio Code and open the **sb-pwa.js** file from the Explorer panel.
+10. Copy and paste the following code snippet:
+
+    ```javascript
+    Notification.requestPermission()
+    .then(function (result) {
+      console.log("Notification permission: " + result);
+    });
+    ```
+    The **requestPermission()** method exposed by the **Notification** object will force the request from the browser to allow receiving notifications from our web application. The method uses the promises approach, so we can define a function in the **then()** method to discover if the user has given consent or not. In our case, we simply log in the console the choice of the user, which could be **granted** or **denied**.
+
+11. Now go back to Chrome and reload the website. The browser will prompt you the following request:
+
+    ![](notificationspermissions.png)
+    
+12. Click on **Allow**.
+13. Now press again F12 to open the developer tools, move to the **Application --> Service Worker** tab and press the **Push** button we have highlighted in step 7.
+10. This time the notification should pop up and then stored in the Action Center of Windows 10.
 
     ![](notification.png)
 
@@ -829,7 +823,7 @@ public ActionResult Key()
 }
 ```
 
-The second is called **SaveChannel**. Its purpose is to take the subscription sent by the browser and store it inside a database.
+The second is called **SaveChannel()**. Its purpose is to take the subscription sent by the browser and store it inside a database.
 
 ```csharp
 [HttpPost("channel")]
@@ -885,40 +879,39 @@ Now that we have verified that we have all the endpoints we need, we can impleme
 
     ```javascript
     navigator.serviceWorker.ready.then(function(reg) {
-        Notification.requestPermission(function (result) {
-          if (result === 'granted') {
-            reg.pushManager.getSubscription()
-            .then(function (subscription) {
-              if (subscription) {
-                  console.log('Push subscription already exists');
-                  return subscription;
-              }
-              else {
-                console.log('Push subscription does not exist. We will request a new one');
-                fetch('http://localhost:5000/api/push/key')
-                .then(function(response) {
-                  response.json()
-                  .then(function(data) {
-                    reg.pushManager.subscribe({
-                      userVisibleOnly: true,
-                      applicationServerKey: urlBase64ToUint8Array(data)
-                    })
-                    .then(function (subscription) {
-                      fetch('http://localhost:5000/api/push/channel', {
-                            method: 'post',
-                            headers: { 'Content-type': 'application/json' },
-                            body: JSON.stringify({ subscription: subscription })
-                      }).then(function (result) {
-                          console.log('The push subscription has been stored succesfully');
-                      })
-                      .catch(function (error) {
-                          console.log(error);
-                      });
+      Notification.requestPermission().then(function (result) {
+        if (result === 'granted') {
+          reg.pushManager.getSubscription()
+          .then(function (subscription) {
+            if (subscription) {
+                console.log('Push subscription already exists');
+                return subscription;
+            }
+            else {
+              console.log('Push subscription does not exist. We will request a new one');
+              fetch('http://localhost:5000/api/push/key')
+              .then(function(response) {
+                response.json()
+                .then(function(data) {
+                  reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(data)
+                  })
+                  .then(function (subscription) {
+                  fetch('http://localhost:5000/api/push/channel', {
+                        method: 'post',
+                        headers: { 'Content-type': 'application/json' },
+                        body: JSON.stringify({ subscription: subscription })
+                  }).then(function (result) {
+                      console.log('The push subscription has been stored succesfully');
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                    });
                   });
                 });
               });
-            }
-          });
+            }});
         }
         else {
           console.log('You don\'t have permissions to send push notifications');
@@ -926,15 +919,11 @@ Now that we have verified that we have all the endpoints we need, we can impleme
       });
     });
     ```
-
+    
     This snippet is made by different promises chained together. Let's analyze in the detail the workflow:
     
     a. Before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we append the execution of our function to the **ready** event exposed by the service worker. Then we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
-    b. The next step is to ask the permission to send push notifications. We do this by calling the **Notification.requestPermission()** method, which triggers the request from the browser:
-    
-    ![](notificationspermissions.png)
-    
-    Through a promise we get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
+    b. The next step is to check permission to send push notifications. We do this by calling the **Notification.requestPermission()** method we've already seen in the previous task. We get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
     c. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach the **/api/push/key** endpoint exposed by our Web API to retrieve the key we have previously generated. We do this by using the familiar **fetch()** method.
     d. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
     
