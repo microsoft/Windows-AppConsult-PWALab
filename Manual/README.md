@@ -71,7 +71,7 @@ Service workers are a separate process, hosted by a JavaScript file, which can b
 
 During this lab we'll explore different caching techniques that can be implemented with a service worker.
 
-![](serviceworkers.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/serviceworkers.png)
 
 Another important feature is that service workers can run in the background, even when the browser is not running. As a consequence, service workers are leveraged also to support push notifications. This way, a Progressive Web App or a website can receive notifications even when the user isn't browsing the website or while he's using another application.
 
@@ -156,7 +156,7 @@ The fetch concept is important also when it comes to implement offline scenarios
 #### Cache APIs
 The Cache interface provides a storage mechanism specific for handling network requests. Its purpose, in fact, isn't to store generic key / value pairs, but specific Request / Response object pairs. This is how caching implemented with these APIs looks like:
 
-![](CachingPreview.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/CachingPreview.png)
 
 For each request, the Cache interface stores all the information about the HTTP request. The key identifier is the path of the resource, while the associated value is the full HTTP response, including the content.
 This means that, when we load a resource from the cache, we are able to retrieve its full content, regardless if it's a HTML page, a JavaScript file, a JSON response, an image, etc.
@@ -194,7 +194,7 @@ For this lab we're going to use [Visual Studio Code](https://code.visualstudio.c
 Inside Visual Studio Code we're going to leverage also an extension called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), which is able to quickly spin a web server to host web applications. Thanks to this extension, we'll be able to immediately test the changes we make to the website. The server supports also live reloading: every time we're going to make any change to the code of the website, the browser will be automatically reloaded.
 Using this extension is very easy. Just open in Visual Studio Code the folder which contains the website and press the **Go Live** button highlighted in the image below:
 
-![](golive.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/golive.png)
 
 The default browser of the computer will be opened directly on the website which, by default, will be hosted on the 5500 port of your local machine. 
 
@@ -225,7 +225,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 5.  Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
-![](OpenFolder.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/OpenFolder.png)
 
 7.	Select the *"C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard"* folder.
 8.	In the explorer panel on the left of Visual Studio Code, select the **index.html** file.
@@ -254,7 +254,7 @@ You can refer to [https://developer.mozilla.org/en-US/docs/Web/Manifest](https:/
 Let's add a manifest to the Contose Dashboard website:
 1. Within Visual Studio Code, in the Explorer panel (on the left), click on the **New File** button.
 
-![](newfileButton.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/newfileButton.png)
 
 2. Name it *"manifest.json"* ![](ManifestJson.png)
 3. Copy/Paste the following json as the content: 
@@ -323,7 +323,7 @@ The current web application doesn’t have any kind of offline capability. Since
 8.	Click on **Offline**
 9.	Reload the website by pressing **CTRL+R**. Notice how the browser is returning an error because it can’t reach the server anymore.
 
-![](nointernet.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/nointernet.png)
 
 ### Task 1 - Add a service worker
 As already mentioned at the beginning of the lab, the Service Worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker, it’s able to intercept all the requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
@@ -332,7 +332,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 
 1. Go back to Visual Studio Code and press the **New file** button in the Explorer panel.
 
-    ![](newfile.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/newfile.png)
 
 2. Name it **sw.js**
 3. For the moment, we aren't going to implement any special caching strategy. We're just going to forward all the incoming requests to the server. Copy and paste the following snippet inside the **sw.js** file:
@@ -373,11 +373,11 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 
 That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. If you're using the previous instance of Chrome, make sure to uncheck the **Offline** option in the **Network** section. Move to the **Application** tab and you should see something like this:
 
-![](serviceworkerinstalled.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/serviceworkerinstalled.png)
 
 The service worker has been properly installed and it’s up and running. We can verify that it's indeed acting as a middle man between the browser and the server by moving to the **Network** tab and reloading the page. You will notice that all the requests will be coming from the service worker and not directly from the server:
 
-![](networkserviceworker.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/networkserviceworker.png)
 
 However, the current implementation of the service worker is not really useful. We're just forwarding all the incoming requests to the server, which is something the browser would do anyway.
 Let's move to the second task to start adding offline capabilities.
@@ -387,7 +387,7 @@ A common scenario for a Progressive Web App is to cache, immediately when the se
 
 Let’s take a look at the structure of our web application in the Explorer panel of Visual Studio Code:
 
-![](explorerproject.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/explorerproject.png)
 
 We can identify the following HTML pages:
 
@@ -458,7 +458,7 @@ Let’s define a new function to cache these pages inside the service worker:
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
 9.	Notice how, despite you have visited only the main page of the website (**index.html**), also other pages have been cached:
 
-    ![](cacheall.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/cacheall.png)
     
     These are the pages that we have manually added to the cache when the service worker has been installed.
 
@@ -502,7 +502,7 @@ It's now time to test the code:
 6. Check the **Offline** option.
 7. Now reload the website again. You will see something similar to the image below:
 
-![](websitewithoutcss.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/websitewithoutcss.png)
 
 Compared to the previous tests, this time we're indeed getting something back and we aren't seeing anymore the offline error message provided by the browser. However, the outcome isn't really exciting.
 
@@ -512,7 +512,7 @@ When we have registered the service worker, we have cached only the HTML pages. 
 
 We can verify that this is indeed the case with the developer tools. Move to the **Network** tab. You will notice how the **index.html** is indeed being returned by the Service Worker, while all the other requests are failing:
 
-![](indexfromserviceworker.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/indexfromserviceworker.png)
 
 A way to solve this problem would be to update the service worker initialization code in order to register all the other files which are required to properly render the web application. However, woudln't be simpler if we just add all the incoming requests to the cache? This is what we're going to implement in the next task.
 
@@ -570,7 +570,7 @@ Let's test the new behavior.
 6. Click on the available cache, named **pwabuilder-offline**.
 7. Observe, in the center of the panel, the content of the cache. As you can see, now it contains many more items and not just the pages that are cached when the service worker is installed for the first time.
 
-    ![](realtimecache.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/realtimecache.png)
 
 8. Stay in the **Applications** tab of the developer tools and choose, this time, **Service Worker**.
 9. Check **Offline** at the top of the panel.
@@ -581,7 +581,7 @@ Let's test the new behavior.
 Caching doesn't work only with standard web resources like HTML pages or CSS files, but with any HTTP request, including the output of REST services.
 We can see an example in the Contoso Dashboard application. The main page includes 4 boxes, which display in real time the status of various activities happening inside the company.
 
-![](dashboard.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/dashboard.png)
 
 The information displayed in these boxes is retrieved from a REST service exposed on Internet.
 
@@ -609,7 +609,7 @@ The information displayed in these boxes is retrieved from a REST service expose
 6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
 7. Click on the **/api/messages** cached resource and notice how it contains the JSON downloaded from the REST service.
 
-![](messagesjson.png)
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/messagesjson.png)
 
 8. You can test that the request is being succesfully cached by observing the different behavior when you're online or offline:
 - If you're online, every time you refresh the page the number in the various boxes will change, since it's returned by the REST API
@@ -737,13 +737,13 @@ This is all the code we need to handle incoming push notifications. Chrome gives
 
 11. Now go back to Chrome and reload the website. The browser will prompt you the following request:
 
-    ![](notificationspermissions.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/notificationspermissions.png)
     
 12. Click on **Allow**.
 13. Now press again F12 to open the developer tools, move to the **Application --> Service Worker** tab and press the **Push** button we have highlighted in step 7.
 10. This time the notification should pop up and then stored in the Action Center of Windows 10.
 
-    ![](notification.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/notification.png)
 
 The event we have registered in the service worker is working as expected. However, the current implementation isn't really useful. The notification is displayed only locally and when the website is up & running. In a real push notification scenario, we need to subscribe to a channel and to implement a backend to store them.
 
@@ -757,11 +757,11 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
 3. In the Explorer panel on the left you will find a file called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
 4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
 
-    ![Debug button on the left side](vscodedebug.png)
+    ![Debug button on the left side](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/vscodedebug.png)
     
 5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button.
   
-    ![Play button for Debug](PlayButtonForDebug.png)
+    ![Play button for Debug](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/PlayButtonForDebug.png)
     
 6. The Web API will be available at the URL **http://localhost:5000**. We will reuse this URL later when we're going to implement subscriptions in the Contoso Dashboard website.
 
@@ -772,7 +772,7 @@ In order to authenticate your backend against the push notification service you 
 2. Copy and paste in the address bar the following URL: [https://web-push-codelab.glitch.me/](https://web-push-codelab.glitch.me/)
 3. You will see a page with a first section titled **Application Server Keys**.
 
-    ![](appserverkeys.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/appserverkeys.png)
     
 4. Copy the value under **Public Key**. Then go back to the Visual Studio Code instance with the Web API project, look for the file called **appsettings.Development.json** in the Explorer panel and open it.
 5. Paste the value in the **VAPIDPublicKey** property.
@@ -965,11 +965,11 @@ The implementation is now complete. We are ready to test it!
 7. Move to the **Console** section of the developer tools.
 8. If you did everything correctly, you should see in the log the following two messages:
 
-    ![](logpush.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/logpush.png)
 
 9. If you reload the page, instead, you should see the following message:
 
-    ![](logpushalreadyexist.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ogpushalreadyexist.png)
     
 10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder *"Lab/Exercise 3/Start/Contoso.PushServer"* from the location where you have unzipped the lab content (it should be *"C:\PWALab"*).
 11. Choose **File**, then **Open Windows PowerShell**.
@@ -983,13 +983,13 @@ The implementation is now complete. We are ready to test it!
 14. Open a new instance of Chrome and type this URL in the address bar.
 15. In the page you should see the subscription you have just registered with its unique channel URI. The website is communicating with the **/api/channel** endpoint exposed by our Web API, this time with a GET instead of a POST. In this case, the endpoint is simply returning the list of all the subscriptions stored in the database.
 
-    ![](googlechannel.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/googlechannel.png)
     
 16. Notice that the URL of the channel belongs to the domain **fcm.googleapis.com**. This is because we have opened the Contoso Dashboard website in Chrome and, as such, we're automatically using the notification service offered by Google.
 17. Now open the Edge browser and type in the address bar the URL of the Contoso Dashboard, which is **http://127.0.0.1:5500**. Wait for the website to load.
 18. Now go back to the Chrome instance with the Contoso backend and refresh the page. You will see a new channel appearing in the list.
 
-    ![](edgechannel.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/edgechannel.png)
     
 19. Notice how the URI of this new channel will be based on a domain like **db5p.notify.windows.com**. This time we have opened the website in Edge and, as such, we are automatically leveraging the Windows Notification Service to handle subscriptions.
 
@@ -1104,6 +1104,6 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
 9. A notification will be displayed in the lower left corner of your screen. Click on it.
 10. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
 
-    ![](contosonotification.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/contosonotification.png)
 
 This was just a basic example on how to handle the activation of a push notification. You can also implement more advanced strategies, like using custom actions (as explained [in this article](https://developers.google.com/web/fundamentals/push-notifications/notification-behaviour)) or using the **focus()** method to reuse an existing instance of the browser if it's already opened (as explained [in this article](https://developer.mozilla.org/en-US/docs/Web/API/WindowClient/focus).
