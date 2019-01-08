@@ -203,15 +203,17 @@ Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a 
 ___
 ## Exercise 1 - Adding a Manifest to the website
 
-The Contoso Dashboard website is built on [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. It doesn't have a server-side component. The whole project runs on the client side and it's based only on HTML5, CSS and JavaScript.
+The Contoso Dashboard website built on [Bootstrap](https://getbootstrap.com/) does not have any server-side component. The whole project runs on the client side. The project was initiated using the [SB Admin template](https://startbootstrap.com/template-overviews/sb-admin/):
 
-The project was initiated using the [SB Admin template](https://startbootstrap.com/template-overviews/sb-admin/):
+![Contoso Dashboard website screen capture](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ContosoDashboardWebsiteCapture.png)
 
-![Contoso Dashboard website screen capture](ContosoDashboardWebsiteCapture.png)
+We already customized the project so that the data displayed in the dashboard are taken from a set of REST services based on Azure functions. Do not worry about this part: The website just pull dynamic data to show to the user.
 
-We already customized the project so that the data displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
+Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding 
+- A web standard file which is the **Web app manifest**. The manifest will define the features of the app such as name, icon, splash screen, theme colors and so on.
+- A Service Worker that will be able to run in background. With many others possibilities, as acting as a middle man between the browser and the website, it will cahc pages in order to provide offline capabilities.
 
-Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding a web standard file which is the **Web app manifest**. The manifest will define the features of the app such as name, icon, splash screen, theme colors and so on. 
+We take care of all that in the following tasks.
 
 ### Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
@@ -219,7 +221,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 2. In order to get the source code of the Contoso Dashboard customized website, go to [Windows AppConsult PWALab repository](https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/). Click on the **releases** tab and donwload the latest release.
 3.  When ready, click on the downloaded file in your browser to open it.
 
-![Downloaded file in Chrome](SourceCodeDownloaded.png)
+![Downloaded file in Chrome](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/SourceCodeDownloaded.png)
 
 4.  Open the zip file and extract all the content to your working folder *"C:\PWALab"* you've just created.
 
@@ -235,7 +237,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 You are ready to work on the code!
 
 ### Task 2 - Create the Manifest
-The Web App Manifest is beeing defined by the W3C; The [specification](https://www.w3.org/TR/appmanifest/") is still in progress. Nevertheless, a good schema's description can be found at [http://json.schemastore.org/web-manifest](http://json.schemastore.org/web-manifest).
+The Web App Manifest is beeing defined by the W3C; The [specification](https://www.w3.org/TR/appmanifest/) is still in progress. Nevertheless, a good schema's description can be found at [http://json.schemastore.org/web-manifest](http://json.schemastore.org/web-manifest).
 
 The manifest is a JSON-formatted file describing key information about the app. Here are the main elements:
 - **name** - Long name of the application.
@@ -291,7 +293,7 @@ Some explanations:
 - We provide 2 icons. One with the 96x96 pixels dimension with the logo only and another one 192x192 sized with logo and Company name.
 - The background color is white ; Theme color is green/gray (the one of the Contoso logo).
 - The start url is the website default page.
-- Standalone's display we make the app look and feel the same as a classic app.
+- The display named 'Standalone' makes the app's look and feel the same as a modern app from the Store.
 
 ### Task 3 - Add the manifest to the website
 In order to add the manifest to the Contoso Dashboard website, we just add a `<link>` element in the default page. Here are the steps:
@@ -302,30 +304,9 @@ In order to add the manifest to the Contoso Dashboard website, we just add a `<l
 <link rel="manifest" href="/manifest.json">
 ```
 
-As you noticed, in the previous task, we use 2 icons. These icons were already created and put for you at the website root.
+As you noticed, in the previous task, we use 2 images for the icons. These images were already created and put for you at the website root.
 
-### Task 4 - Install the PWA
-TODO
-
-___
-## Exercise 2 - Adding offline capabilities
-One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
-
-The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we physically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
-
-1.	Open Visual Studio Code and choose **Open folder**.
-2.	Select the folder *"Lab/Exercise2/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file of the lab (it should be *"C:\PWALab"*)
-3.	Select the **index.html** file from the Explorer panel on the left
-4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5500**. Notice that the website is loading properly, since the connection is active.
-6.	Now press F12 to turn on the developer tools.
-7.	Move to the **Network** tab.
-8.	Click on **Offline**
-9.	Reload the website by pressing **CTRL+R**. Notice how the browser is returning an error because it can’t reach the server anymore.
-
-![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/nointernet.png)
-
-### Task 1 - Add a service worker
+### Task 4 - Add a service worker
 As already mentioned at the beginning of the lab, the Service Worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker, it’s able to intercept all the requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
 
 Let’s start to add a basic service worker to our Contoso Dashboard website. 
@@ -380,9 +361,30 @@ The service worker has been properly installed and it’s up and running. We can
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/networkserviceworker.png)
 
 However, the current implementation of the service worker is not really useful. We're just forwarding all the incoming requests to the server, which is something the browser would do anyway.
-Let's move to the second task to start adding offline capabilities.
+In the Exercise 2, we will bring useful functionnalities to the service worker by adding some offline capabilities.
 
-### Task 2 - Enable caching at install time
+### Task 5 - Install the PWA
+TODO
+
+___
+## Exercise 2 - Adding offline capabilities
+One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
+
+The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we physically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
+
+1.	Open Visual Studio Code and choose **Open folder**.
+2.	Select the folder *"Lab/Exercise2/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file of the lab (it should be *"C:\PWALab"*)
+3.	Select the **index.html** file from the Explorer panel on the left
+4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
+5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5500**. Notice that the website is loading properly, since the connection is active.
+6.	Now press F12 to turn on the developer tools.
+7.	Move to the **Network** tab.
+8.	Click on **Offline**
+9.	Reload the website by pressing **CTRL+R**. Notice how the browser is returning an error because it can’t reach the server anymore.
+
+![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/nointernet.png)
+
+### Task 1 - Enable caching at install time
 A common scenario for a Progressive Web App is to cache, immediately when the service worker is installed for the first time, a set of pages that could be commonly visited by the user or which content could be leveraged also offline.
 
 Let’s take a look at the structure of our web application in the Explorer panel of Visual Studio Code:
@@ -516,7 +518,7 @@ We can verify that this is indeed the case with the developer tools. Move to the
 
 A way to solve this problem would be to update the service worker initialization code in order to register all the other files which are required to properly render the web application. However, woudln't be simpler if we just add all the incoming requests to the cache? This is what we're going to implement in the next task.
 
-### Task 3 - Enable cache at request time
+### Task 2 - Enable cache at request time
 In the previous task we have intercepted the **fetch** event to handle caching. However, we were focused only in reading from the cache. If the current request couldn't be satisfied because the Internet connection was missing, we tried to read it from the cache.
 
 However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that were downloaded while the user browsed the web application.
@@ -576,7 +578,7 @@ Let's test the new behavior.
 9. Check **Offline** at the top of the panel.
 10. Now reload the page. You will notice that, this time, the offline page will look exactly like the online one, without errors or noticeable issues. The reason is that, this time, also all the required CSS and JavaScript files have been cached and not just the HTML ones.
 
-### Task 4 - Cache specific requests (optional tasks)
+### Task 3 - Cache specific requests (optional tasks)
 
 Caching doesn't work only with standard web resources like HTML pages or CSS files, but with any HTTP request, including the output of REST services.
 We can see an example in the Contoso Dashboard application. The main page includes 4 boxes, which display in real time the status of various activities happening inside the company.
