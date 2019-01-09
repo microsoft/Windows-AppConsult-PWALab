@@ -428,7 +428,7 @@ We are all set! The app is now in the Start menu of Windows 10 like any other mo
 
 Please note that, at the moment of writing, to uninstall the app, you have to launch it and use the Chrome 'Menu' button available in the title bar.
 
-![](Ihttps://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/UninstallPWA.png)
+![Uninstall the app from the Chrome Menu button](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/UninstallPWA.png)
 
 We have now a first version of the Contoso Dashboard PWA. In the following two exercises, we will enhance it to provide offline capabilities and enable web push notifications.
 
