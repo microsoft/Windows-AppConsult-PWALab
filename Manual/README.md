@@ -364,7 +364,39 @@ However, the current implementation of the service worker is not really useful. 
 In the Exercise 2, we will bring useful functionnalities to the service worker by adding some offline capabilities.
 
 ### Task 5 - Install the PWA
-TODO
+
+With the App manifest and the Service Worker, the Contoso Dashboard website is now a full PWA. Do want to verify it? No problem.
+
+1.  Browse the website **http://127.0.0.1:5500/index.html**.
+2.  Press F12 to turn on the developer tools.
+3.  Move to the **Application** tab.
+4.  Click on the **Manifest** section under **Application** in the left menu of the developer tools.
+5.  You will get all the parameters we defined for the app in the Manifest.json.
+    
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ManifestSectionInTheDeveloperTools.png)
+
+We can now test to install locally the Contoso Dashboard application: Nothing is more simple:
+1.  Stay in Chrome on the Contoso Dashboard website and click on the **'Menu'** button on the top right
+
+    ![Chrome Menu button](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/DotButtonInChrome.png)
+    
+2.  Because the Contoso Dashboard website is recognized as a PWA, Chrome will display in the menu a new entry named '**Install \<\<Application Name from the manifest>>**'. In our case, click on **Install Contoso Dashboard**.
+
+    ![Install PWA from Chrome](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/InstallPWAInChrome.png)
+
+3.  Chrome will display a confirmation popup, just click on **Install**
+
+    ![Install confirmation popup](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/InstallConfirmationPopup.png)
+
+We are all set! The app is now in the Start menu of Windows 10 like any other modern app. You can launch it, **Pin it to Start** or event **Pin to taskbar**. Here is the behavior of the Contoso Dashboard PWA standalone app:
+
+![Contoso Dashboard Standalone App](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ContosoDashboardStandaloneApp.png)
+
+Please note that, at the moment of writing, to uninstall the app, you have to launch it and use the Chrome 'Menu' button available in the title bar.
+
+![](Ihttps://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/UninstallPWA.png)
+
+We have now a first version of the Contoso Dashboard PWA. In the following two exercises, we enhance it to provide offline capabilities and enable web push notifications.
 
 ___
 ## Exercise 2 - Adding offline capabilities
