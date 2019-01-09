@@ -1,86 +1,70 @@
 (function($) {
   "use strict"; // Start of use strict
 
-  $(document).ready(function() {
+  var baseUrl = 'https://ready2019-pwa.azurewebsites.net';
+    
+  async function updateMessages() {
+    var url = baseUrl + '/api/messages';
 
-    var baseUrl = 'https://ready2019-pwa.azurewebsites.net';
+    let cache = await caches.open('pwabuilder-offline');
+    let cacheResult = await cache.match(url);
+    let json = await cacheResult.json();
+    $('#messages').html(json.count + ' New messages!');
 
-    caches.open('pwabuilder-offline')
-    .then(function (cache) {
-      cache.match(baseUrl + '/api/messages')
-      .then(json)
-      .then(function (data) {
-            $('#messages').html(data.count + " New Messages!");
-          });
-      })
-      .then (function() {
-        fetch(baseUrl + '/api/messages')
-        .then(json)
-        .then(function (data) {
-          $('#messages').html(data.count + " New Messages!");
-        });
-      });
-      
-    caches.open('pwabuilder-offline')
-    .then(function (cache) {
-      cache.match(baseUrl + '/api/tasks')
-      .then(json)
-      .then(function (data) {
-            $('#tasks').html(data.count + " New Tasks!");
-          });
-      })
-    .then (function() {
-      fetch(baseUrl + '/api/tasks')
-      .then(json)
-      .then(function (data) {
-        $('#tasks').html(data.count + " New Tasks!");
-      });
-    });
+    let httpResult = await fetch(url);
+    let jsonResult = await httpResult.json();
+    $('#messages').html(jsonResult.count + ' New messages!');
+  }
 
-    caches.open('pwabuilder-offline')
-    .then(function (cache) {
-      cache.match(baseUrl + '/api/orders')
-      .then(json)
-      .then(function (data) {
-            $('#orders').html(data.count + " New Orders!");
-          });
-      })
-    .then (function() {
-      fetch(baseUrl + '/api/orders')
-      .then(json)
-      .then(function (data) {
-        $('#orders').html(data.count + " New Orders!");
-      });
-    });
+  async function updateTasks() {
+    var url = baseUrl + '/api/tasks';
 
-    caches.open('pwabuilder-offline')
-    .then(function (cache) {
-      cache.match(baseUrl + '/api/tickets')
-      .then(json)
-      .then(function (data) {
-            $('#tickets').html(data.count + " New Tickets!");
-          });
-      })
-    .then (function() {
-      fetch(baseUrl + '/api/tickets')
-      .then(json)
-      .then(function (data) {
-        $('#tickets').html(data.count + " New Tickets!");
-      });
-    });
+    let cache = await caches.open('pwabuilder-offline');
+    let cacheResult = await cache.match(url);
+    let json = await cacheResult.json();
+    $('#tasks').html(json.count + ' New tasks!');
 
+    let httpResult = await fetch(url);
+    let jsonResult = await httpResult.json();
+    $('#tasks').html(jsonResult.count + ' New tasks!');
+  }
+
+  async function updateOrders() {
+    var url = baseUrl + '/api/orders';
+
+    let cache = await caches.open('pwabuilder-offline');
+    let cacheResult = await cache.match(url);
+    let json = await cacheResult.json();
+    $('#orders').html(json.count + ' New orders!');
+
+    let httpResult = await fetch(url);
+    let jsonResult = await httpResult.json();
+    $('#orders').html(jsonResult.count + ' New orders!');
+  }
+
+  async function updateTickets() {
+    var url = baseUrl + '/api/tickets';
+
+    let cache = await caches.open('pwabuilder-offline');
+    let cacheResult = await cache.match(url);
+    let json = await cacheResult.json();
+    $('#tickets').html(json.count + ' New tickets!');
+
+    let httpResult = await fetch(url);
+    let jsonResult = await httpResult.json();
+    $('#tickets').html(jsonResult.count + ' New tickets!');
+  }
+
+  document.addEventListener('DOMContentLoaded', async function() {
+    await Promise.all([updateMessages(), updateTasks(), updateOrders(), updateTickets()]);
+   
     var urlParams = new URLSearchParams(window.location.search);
     var title = urlParams.get('title');
     var message = urlParams.get('message');
 
     $('#notificationTitle').html(title);
     $('#notificationMessage').html(message);
-
   });
-
-  function json(response) {
-    return response.json();
-  }
 
   // Toggle the side navigation
   $("#sidebarToggle").on('click',function(e) {

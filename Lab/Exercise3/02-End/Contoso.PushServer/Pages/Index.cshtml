@@ -25,14 +25,14 @@
 </div>
 
 <script type="text/javascript">
-    function sendNotification(uri, p256dh, auth) {
+    async function sendNotification(uri, p256dh, auth) {
 
         var subscription = {};
         subscription["channelUri"] = uri;
         subscription["p256dh"] = p256dh;
         subscription["auth"] = auth;
 
-        fetch('http://localhost:5000/api/push/notification', {
+        await fetch('http://localhost:5000/api/push/notification', {
             method: 'post',
             headers: {
                 'Content-type': 'application/json' },

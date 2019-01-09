@@ -1,59 +1,59 @@
-if (navigator.serviceWorker.controller) {
-    console.log('[PWA Builder] active service worker found, no need to register');
+document.addEventListener("DOMContentLoaded", async function(event) {
+  if (navigator.serviceWorker.controller) {
+    console.log('[PWALab] Active service worker found, no need to register');
   } else {
-    //Register the ServiceWorker
-    navigator.serviceWorker.register('sw.js', {
-      scope: './'
-    }).then(function(reg) {
-      console.log('Service worker has been registered for scope:'+ reg.scope);    
-    });
+    let reg = await navigator.serviceWorker.register('sw.js', { scope: './'});
+    console.log('[PWALab] Service worker has been registered for scope: ' + reg.scope);
   }
 
-Notification.requestPermission()
-.then(function (result) {
-  console.log("Notification permission: " + result);
-});
-  
-navigator.serviceWorker.ready.then(function(reg) {
-  Notification.requestPermission().then(function (result) {
-    if (result === 'granted') {
-      reg.pushManager.getSubscription()
-      .then(function (subscription) {
-        if (subscription) {
-            console.log('Push subscription already exists');
-            return subscription;
-        }
-        else {
-          console.log('Push subscription does not exist. We will request a new one');
-          fetch('http://localhost:5000/api/push/key')
-          .then(function(response) {
-            response.json()
-            .then(function(data) {
-              reg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(data)
-              })
-              .then(function (subscription) {
-              fetch('http://localhost:5000/api/push/channel', {
-                    method: 'post',
-                    headers: { 'Content-type': 'application/json' },
-                    body: JSON.stringify({ subscription: subscription })
-              }).then(function (result) {
-                  console.log('The push subscription has been stored succesfully');
-              })
-              .catch(function (error) {
-                  console.log(error);
-                });
-              });
-            });
-          });
-        }});
+
+let permission = await Notification.requestPermission();
+console.log("[PWALab] Notification permission: " + permission);
+
+let reg = await navigator.serviceWorker.ready;
+  let perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    let subscription = await reg.pushManager.getSubscription();
+    if (subscription) {
+      console.log('Push subscription already exists');
+      return subscription;
     }
     else {
-      console.log('You don\'t have permissions to send push notifications');
+      console.log('[PWALab] Push subscription does not exist. We will request a new one');
+      let vapidKey = await getVAPIDkey();
+      let subscription = await reg.pushManager.subscribe({
+        userVisibleOnly : true,
+        applicationServerKey : urlBase64ToUint8Array(vapidKey)
+      });
+      
+      await postSubscription(subscription);
     }
-  });
+  }
+  else {
+    console.log('[PWALab] Permission not granted for push notifications');
+  }
 });
+
+async function getVAPIDkey() {
+  let response = await fetch('http://localhost:5000/api/push/key');
+  let json = await response.json();
+  return json;
+}
+
+async function postSubscription(subscription) {
+  try {
+    let response = await fetch('http://localhost:5000/api/push/channel', {
+      method: 'post',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ subscription: subscription })
+    });
+    console.log('[PWALab] The push subscription has been stored succesfully');
+  }
+  catch (error) {
+    console.log('[PWALab] Error saving the subscription: ' + error);
+  }
+}
+  
 
 function urlBase64ToUint8Array(base64String) {
   var padding = '='.repeat((4 - base64String.length % 4) % 4);

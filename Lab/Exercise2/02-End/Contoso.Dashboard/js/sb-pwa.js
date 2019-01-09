@@ -1,10 +1,8 @@
-if (navigator.serviceWorker.controller) {
+document.addEventListener("DOMContentLoaded", async function(event) {
+  if (navigator.serviceWorker.controller) {
     console.log('[PWALab] Active service worker found, no need to register');
-} else {
-  //Register the ServiceWorker
-  navigator.serviceWorker.register('sw.js', {
-    scope: './'
-  }).then(function(reg) {
-    console.log('[PWALab] Service worker has been registered for scope: ' + reg.scope);    
-  });
-}
+  } else {
+    let reg = await navigator.serviceWorker.register('sw.js', { scope: './'});
+    console.log('[PWALab] Service worker has been registered for scope: ' + reg.scope);
+  }
+});
