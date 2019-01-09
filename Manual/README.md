@@ -23,7 +23,7 @@
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add the minimum components which turn a website int oa Progressive Web App. The first one is the manifest, which is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser. The second one is the service worker,  which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website.
+1. In the first exercise you will add the minimum set of features which turn a website into a Progressive Web App. The first one is the manifest, which is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser. The second one is the service worker,  which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website.
 2. In the second exercise you will explore the different caching techniques that can be implemented with a service worker, which will allow the website to be used also when you’re offline.
 3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
 
@@ -126,7 +126,7 @@ The most recent version of all the major browsers have also enabled a new way to
 - You mark a function which invokes asynchronous methods with the **async** keyword.
 - You prefix the invocation of the asynchronous method with the **await** keyword and, optionally, you can directly assign the returned value to a variable.
 
-Thanks to this approach the code is even easier to read and mantain, since it looks like synchronouse code: every row is executed one after the other, without needing to chain operations one after the other, which could make the code hard to follow in case of too many chained tasks. However, under the hood, operations are performed asynchronously and, as such, they don't block the UI thread while they're being executed.
+Thanks to this approach the code is even easier to read and mantain, since it looks like synchronouse code: every row is executed one after the other, without needing to chain operations which could make the code hard to follow in case of too many chained tasks. However, under the hood, operations are performed asynchronously and, as such, they don't block the UI thread while they're being executed.
 This is how the previous sample looks like when it's implemented with the async / await approach:
 
 ```javascript
@@ -373,7 +373,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
         let reg = await navigator.serviceWorker.register('sw.js', { scope: './'});
         console.log('[PWALab] Service worker has been registered for scope: ' + reg.scope);
       }
-    }
+    });
     ```
     
     First we register to the **DOMContentLoaded** event, so that we execute the code only when the page has been fully loaded. This code first checks if a service worker is already registered, by checking the **navigator.serviceWorker.controller** property. If that’s the case, we don’t have to do anything. Otherwise, we move on with the registration process by calling the **navigator.serviceWorker.register()** method, which requires two parameters:
@@ -465,9 +465,10 @@ We can identify the following HTML pages:
 - forgot-password.html
 - index.html
 - login.html
+- notifications.html
+- offline.html
 - register.html
 - tables.html
-- notifications.html
 
 > Can you identify which are good candidates for being cached when the service worker is installed?
 
@@ -479,6 +480,8 @@ Here is the list with, highlighted in bold, the pages which should be cached whe
 - forgot-password.html
 - **index.html**
 - login.html
+- notifications.html
+- **offline.html**
 - register.html
 - **tables.html**
 - notifications.html
@@ -558,7 +561,7 @@ We need to change the current handler of the **fetch** event in a way that, if t
         }
       }
     
-      event.respondWith(fetchRequest(event.request);
+      event.respondWith(fetchRequest(event.request));
     });
     ```
     
@@ -595,7 +598,7 @@ In the previous task we have intercepted the **fetch** event to handle caching. 
 However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that were downloaded while the user browsed the web application.
 
 1. Open the **sw.js** file in Visual Studio Code
-2. Look for the function which handles the **fetch** event we have created in task 2 and delete it.
+2. Look for the function which handles the **fetch** event we have created in task 1 and delete it.
 3. Copy and paste the following code in replacement:
 
     ```javascript
@@ -627,7 +630,7 @@ However, this event can be used also to write to the cache. This is what we're g
     ```
 
     
-    The main part of the snippet is the same we have created in task 2. We have a function called **fetchRequest**, invoked using **event.respondWith()**, which takes care of intercepting the request and, in case the connection fails, look if it was already cached. However, inside the event handler we have defined also a new asynchronous function called **updateCache()**. This operation sends the request to the server, takes the response and, by using the **put()** method offered by the **cache** object, stores it inside the cache.
+    The main part of the snippet is the same we have created in the previous task. We have a function called **fetchRequest**, invoked using **event.respondWith()**, which takes care of intercepting the request and, in case the connection fails, to look if it was already cached. However, inside the event handler we have defined also a new asynchronous function called **updateCache()**. This operation sends the request to the server, takes the response and, by using the **put()** method offered by the **cache** object, stores it inside the cache.
     The **updateCache()** function is then invoked using the **event.waitUntil()** method. This approach makes sure that the service worker doesn't get terminated until the response has been properly stored in the cache.
     
 Let's test the new behavior.
@@ -646,7 +649,7 @@ Let's test the new behavior.
 9. Check **Offline** at the top of the panel.
 10. Now reload the page. You will notice that, this time, the offline page will look exactly like the online one, without errors or noticeable issues. The reason is that, this time, also all the required CSS and JavaScript files have been cached and not just the HTML ones.
 
-### Task 3 - Cache specific requests (optional tasks)
+### Task 3 - Cache specific requests (optional task)
 
 Caching doesn't work only with standard web resources like HTML pages or CSS files, but with any HTTP request, including the output of REST services.
 We can see an example in the Contoso Dashboard application. The main page includes 4 boxes, which display in real time the status of various activities happening inside the company.
@@ -784,7 +787,7 @@ This is all the code we need to handle incoming push notifications. Chrome gives
 
     ```javascript
     let permission = await Notification.requestPermission();
-    console.log("[PWALab] Notification permission: " + result);
+    console.log("[PWALab] Notification permission: " + permission);
     ```
     
     The **requestPermission()** method exposed by the **Notification** object will force the request from the browser to allow receiving notifications from our web application. The method uses the promises approach, so we can await for the outcome and use the returned object to discover if the user has given consent or not. In our case, we simply log in the console the choice of the user, which could be **granted** or **denied**.
@@ -806,7 +809,7 @@ This will be our goal in the next tasks of this exercise.
 ### Task 2 - Setting up the backend
 As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints implemented. 
 
-1. Open Visual Studio Code.
+1. Open a new instance of Visual Studio Code.
 2. Choose **File -> Open Folder** and look for the folder *"Lab/Exercise3/01-Start/Contoso.WebAPI"* in the location where you have unzipped the lab material (it should be *"C:\PWALab"*).
 3. In the Explorer panel on the left you will find a file called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
 4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
@@ -929,34 +932,32 @@ Now that we have verified that we have all the endpoints we need, we can impleme
 
 1. Open the Contoso Dashboard website in Visual Studio Code.
 2. Look, in the Explorer panel, for the file **sb-pwa.js** file in the **js** folder.
-3. Copy and paste the following snippet at the end of the file:
+3. Copy and paste the following snippet at the end of the file, making sure to include it inside the function which handles the **DOMContentLoaded** event:
     
     ```javascript
     let reg = await navigator.serviceWorker.ready;
-      let perm = await Notification.requestPermission();
-      if (perm === 'granted') {
+    let perm = await Notification.requestPermission();
+    if (perm === 'granted') {
         let subscription = await reg.pushManager.getSubscription();
         if (subscription) {
-          console.log('Push subscription already exists');
-          return subscription;
+        console.log('Push subscription already exists');
+        return subscription;
         }
         else {
-          console.log('[PWALab] Push subscription does not exist. We will request a new one');
-          let vapidKey = await getVAPIDkey();
-          let subscription = await reg.pushManager.subscribe({
+        console.log('[PWALab] Push subscription does not exist. We will request a new one');
+        let vapidKey = await getVAPIDkey();
+        let subscription = await reg.pushManager.subscribe({
             userVisibleOnly : true,
             applicationServerKey : urlBase64ToUint8Array(vapidKey)
-          });
-          
-          await postSubscription(subscription);
+        });
+    
+        await postSubscription(subscription);
         }
-      }
-      else {
+    }
+    else {
         console.log('[PWALab] Permission not granted for push notifications');
-      }
-    });
+    }
     ```
-
     
     This snippet is made by different chained asynchronous methods. Let's analyze in the detail the workflow:
     
@@ -968,7 +969,7 @@ Now that we have verified that we have all the endpoints we need, we can impleme
          - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, not all the browsers support this scenario for security reasons. For example, not setting this property or setting it to **false** will result in an error if you're using Chrome.
         - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
         
-    e. If the new subscription is registered successfully, we need to store in it in our backend. As such, we engage again with our Web API, by sending the subscription object. We do this in the **postSubscription()** function, which will see in a moment. perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
+    e. If the new subscription is registered successfully, we need to store in it in our backend. As such, we engage again with our Web API, by sending the subscription object. We do this in the **postSubscription()** function, which will see in a moment.
     
 4. Now let's implement the various functions we have seen in the main snippet. Let's start bt yhe **getVAPIDKey()** one. Copy and paste the following snippet after the previous one:
 
@@ -1036,7 +1037,7 @@ The implementation is now complete. We are ready to test it!
 
 9. If you reload the page, instead, you should see the following message:
 
-    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ogpushalreadyexist.png)
+    ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/logpushalreadyexist.png)
     
 10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder *"Lab/Exercise 3/Start/Contoso.PushServer"* from the location where you have unzipped the lab content (it should be *"C:\PWALab"*).
 11. Choose **File**, then **Open Windows PowerShell**.
