@@ -9,7 +9,7 @@
 - Learn how you can turn an existing website into a Progressive Web App
 - Learn how to create a manifest file for your website
 - Learn how to build a service worker
-- Understand how a service worker can help you caching the incoming requests so that you can provide an offline experience
+- Understand how a service worker can help you cache the incoming requests so that you can provide an offline experience
 - Learn some of the available caching techniques
 - Learn how a service worker can support push notifications
 - Understand how to build a backend to send push notifications to a Progressive Web App
@@ -23,7 +23,7 @@
 ### Overview of the lab
 
 The lab consists of three exercises, which will help you to take an existing website and gradually enhance it to turn it into a Progressive Web App. 
-1. In the first exercise you will add the minimum set of features which turn a website into a Progressive Web App. The first one is the manifest, which is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use it the website even without opening the browser. The second one is the service worker,  which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website.
+1. In the first exercise you will add the minimum set of features which turn a website into a Progressive Web App. The first one is the manifest, which is a simple JSON file that describes the app. Thanks to the manifest, the browser will have the opportunity to enable advanced features, like the ability to install and use the website even without opening the browser. The second one is the service worker,  which is a special JavaScript process that runs in background and acts as a middle man between the browser and the website.
 2. In the second exercise you will explore the different caching techniques that can be implemented with a service worker, which will allow the website to be used also when you’re offline.
 3. In the third and last exercise, you will leverage the service worker to add support for push notifications. Your Progressive Web App will be able to receive notifications from a backend even when the browser is closed.
 
@@ -130,7 +130,7 @@ Thanks to this approach the code is even easier to read and mantain, since it lo
 This is how the previous sample looks like when it's implemented with the async / await approach:
 
 ```javascript
-async function() {
+async function getData() {
     try {
         let response = await fetch('./api/data.json');
         let data = await response.json();    
@@ -153,7 +153,7 @@ The basic usage is quite straightforward. You pass to the **fetch()** method the
 ```javascript
 fetch('./api/data.json')
 .then(function(response) {
-       //the operation is successfull
+       //the operation is successful
       });
 })
 .catch(function(err) {
@@ -164,7 +164,7 @@ fetch('./api/data.json')
 If you use the async / await pattern, errors can simply be catched by embedding the code inside a **try / catch** statement, like in the following example:
 
 ```javascript
-async function() {
+async function getData() {
     try {
         let response = await fetch('./api/data.json');
         //the operation is successfull
@@ -178,11 +178,13 @@ async function() {
 If you need to perform advanced operations, you have the opportunity to pass another parameter, after the URL, with more configuration options, as in the following sample:
 
 ```javascript
-fetch('./api/push/savechannel', {
-     method: 'post',
-     headers: { 'Content-type': 'application/json' },
-     body: JSON.stringify({ subscription: subscription })
-});
+async function saveSubscription(subscription) {
+    await fetch('./api/push/savechannel', {
+        method: 'post',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({ subscription: subscription })
+   });
+}
 ```
 
 In this scenario we're setting up a HTTP POST request and we're specifying its headers and body.
@@ -433,7 +435,7 @@ Please note that, at the moment of writing, to uninstall the app, you have to la
 We have now a first version of the Contoso Dashboard PWA. In the following two exercises, we will enhance it to provide offline capabilities and enable web push notifications.
 
 ___
-## Exercise 2 - Adding offline capabilities
+## Exercise 2 - Add offline capabilities
 One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
 
 The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we physically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
@@ -717,7 +719,7 @@ As such, we can change the function which interacts with the REST API to leverag
 
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
 
-## Exercise 3 - Adding push notifications
+## Exercise 3 - Add push notifications
 
 In this exercise we're going to use the Push APIs and the Notification APIs to enable our Progressive Web App to receive push notifications from a backend. If you have read the introduction about push notifications, you'll remember that the architecture is made by 3 actors: a client application, a backend and a service provided by the platform owner. As such, we will need to work on two components in this exercise:
 
