@@ -8,8 +8,10 @@
 
     let cache = await caches.open('pwabuilder-offline');
     let cacheResult = await cache.match(url);
-    let json = await cacheResult.json();
-    $('#messages').html(json.count + ' New messages!');
+    if (cacheResult) {
+      let json = await cacheResult.json();
+      $('#messages').html(json.count + ' New messages!');
+    }
 
     let httpResult = await fetch(url);
     let jsonResult = await httpResult.json();
@@ -21,8 +23,10 @@
 
     let cache = await caches.open('pwabuilder-offline');
     let cacheResult = await cache.match(url);
-    let json = await cacheResult.json();
-    $('#tasks').html(json.count + ' New tasks!');
+    if (cacheResult) {
+      let json = await cacheResult.json();
+      $('#tasks').html(json.count + ' New tasks!');
+    }
 
     let httpResult = await fetch(url);
     let jsonResult = await httpResult.json();
@@ -34,8 +38,10 @@
 
     let cache = await caches.open('pwabuilder-offline');
     let cacheResult = await cache.match(url);
-    let json = await cacheResult.json();
-    $('#orders').html(json.count + ' New orders!');
+    if (cacheResult) {
+      let json = await cacheResult.json();
+      $('#orders').html(json.count + ' New orders!');
+    }
 
     let httpResult = await fetch(url);
     let jsonResult = await httpResult.json();
@@ -47,8 +53,10 @@
 
     let cache = await caches.open('pwabuilder-offline');
     let cacheResult = await cache.match(url);
-    let json = await cacheResult.json();
-    $('#tickets').html(json.count + ' New tickets!');
+    if (cacheResult) {
+      let json = await cacheResult.json();
+      $('#tickets').html(json.count + ' New tickets!');
+    }
 
     let httpResult = await fetch(url);
     let jsonResult = await httpResult.json();
