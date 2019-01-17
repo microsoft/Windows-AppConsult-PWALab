@@ -702,8 +702,10 @@ As such, we can change the function which interacts with the REST API to leverag
     
       let cache = await caches.open('pwabuilder-offline');
       let cacheResult = await cache.match(url);
-      let json = await cacheResult.json();
-      $('#messages').html(json.count + ' New messages!');
+      if (cacheResult) {
+          let json = await cacheResult.json();
+          $('#messages').html(json.count + ' New messages!');
+      }
     
       let httpResult = await fetch(url);
       let jsonResult = await httpResult.json();
