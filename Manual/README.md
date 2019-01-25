@@ -51,7 +51,7 @@ If you already have these tools on your computer, feel free to directly use it f
 Contoso Dashboard is a web application used by the Contoso internal support team to keep track of all activities that are happening inside the company. The website provides, at a glance, important information like the number of received support tickets, the open tasks, the incoming orders, the list of employees, etc.
 The website is already built using the most recent best practices around web development: it's based on HTML5, JavaScript and CSS ; it offers an adaptive layout. The user interface quickly adapts to the size of the screen, so that it can be used on any device, regardless if it's a desktop machine, a tablet or a smartphone.
 
-The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide offline capabilities. This way, the last updated critical information provided by the dashboard can be accessed even when the Internet connection is missing. Lastly, they would like to enable push notifications, so that users can be immediatelly alerted when a critical event that requires immediate action happens.
+The development team is now looking to further enhance the website and to provide to the users a "native-like" experience, so that it could be easily installed and launched like if it's a native desktop or mobile application. Additionally, they're looking to provide offline capabilities. This way, the last updated critical information provided by the dashboard can be accessed even when the Internet connection is missing. Lastly, they would like to enable push notifications, so that users can be immediately alerted when a critical event that requires immediate action happens.
 
 ### The project
 The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. The website is based on a customization of the free [SB Admin template](https://startbootstrap.com/template-overviews/sb-admin/). It doesn't have a server-side component. The whole project runs client side and it's based only on HTML, CSS and JavaScript.
@@ -126,7 +126,7 @@ The most recent version of all the major browsers have also enabled a new way to
 - You mark a function which invokes asynchronous methods with the **async** keyword.
 - You prefix the invocation of the asynchronous method with the **await** keyword and, optionally, you can directly assign the returned value to a variable.
 
-Thanks to this approach the code is even easier to read and mantain, since it looks like synchronouse code: every row is executed one after the other, without needing to chain operations which could make the code hard to follow in case of too many chained tasks. However, under the hood, operations are performed asynchronously and, as such, they don't block the UI thread while they're being executed.
+Thanks to this approach the code is even easier to read and maintain, since it looks like synchronous code: every row is executed one after the other, without needing to chain operations which could make the code hard to follow in case of too many chained tasks. However, under the hood, operations are performed asynchronously and, as such, they don't block the UI thread while they're being executed.
 This is how the previous sample looks like when it's implemented with the async / await approach:
 
 ```javascript
@@ -161,7 +161,7 @@ fetch('./api/data.json')
 });
 ```
 
-If you use the async / await pattern, errors can simply be catched by embedding the code inside a **try / catch** statement, like in the following example:
+If you use the async / await pattern, errors can simply be caught by embedding the code inside a **try / catch** statement, like in the following example:
 
 ```javascript
 async function getData() {
@@ -204,21 +204,20 @@ We're going to leverage the cache APIs in the service worker, in combination wit
 #### Push notifications
 One of the features mostly frequented adopted by mobile application are push notifications. Since in the mobile ecosystem applications aren't meant to be always running, you need to notify to the user when something important happened even if the application isn't active.
 
-Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life ot the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply register a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
+Push notifications are the best way to achieve this goal, since they are optimized to have a low impact on the battery life of the device. In a push notification architecture, the application doesn't have to keep polling the server to check for notifications. It simply registers a channel, which the server will reach whenever it has a notification to send to the user with a simple HTTP request.
 
 In a typical notification scenario, we have 3 actors involved:
 
 - The client, which is the mobile or desktop application. It takes care of creating a notification channel and sharing it with the backend.
-- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sport application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, with one or more information to identify the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sport application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
+- The backend, which is the server side application that sends the notification. The backend holds the information when it's the right time to send a notification, based on the scenario. For example, a sports application may send a notification every time one of the teams has scored a goal. The backend stores also the list of all the channels coming from the client application, along with information that identifies the user. This way, the backend knows not only the right time, but also the right users who will receive the notification. The sports application, for example, may send a goal notification only to the users who are interested in following one of the teams that has scored.
 - The push notification service. This service acts as a middle man between the client and the backend. The backend won't talk directly to the client, but it will send the HTTP request to the service, which will take care of converting it into a  notification and route it to the right device. Being the point of connection between devices and the backend, each mobile platform offers its own service. Android leverages the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service; iOS uses the [Apple Push Notification service](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1); Microsoft, in the end, offers the [Windows Push Notification service](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview) for Windows devices. All these services implement an authentication process, in order to avoid that a malicious actor may send notifications to a device just by discovering the channel's URL. As a consequence, when you want to implement push notifications in an application, you typically have to register it in a portal provided by the platform owner, so that you can get the credentials required to authenticate against the service.
 
-However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, having to write a different notification implementation for each desktop and mobile platform on the market would be quite expensive.
-The solution is to use Web Push notifications, which are based on two standard W3C features: 
+However, our scenario is slightly different. We have built a web application, which is platform agnostic. As such, we can avoid the platform specific push services mentioned above and instead use the Web Push notifications, which are based on two standard W3C features: 
 
 - [Notifications APIs](https://www.w3.org/TR/notifications/), which take care of rendering the notifications
 - [Push APIs](https://www.w3.org/TR/push-api/), which take care of requesting a channel for receiving push notifications, handling the incoming notifications, etc.
 
-Being based on a standard definition, they are implemented across [all the major browser on the market](https://caniuse.com/#feat=push-api).
+Being based on a standard definition, they are implemented across [all the major browsers on the market](https://caniuse.com/#feat=push-api).
 
 The biggest difference compared to the mobile architecture we have seen is that we won't have to register on different services, based on the platform where the website is running. All the major push notification services on the market, in fact, have added support to the web push standard. As such, the user's browser will automatically leverage the most appropriate service: if you're using Chrome, the channels will be registered on FCN; if you're using Edge, on WNS; etc.
 
@@ -245,7 +244,7 @@ The Contoso Dashboard website built on [Bootstrap](https://getbootstrap.com/) do
 
 ![Contoso Dashboard website screen capture](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ContosoDashboardWebsiteCapture.png)
 
-We already customized the project so that the data displayed in the dashboard are taken from a set of REST services based on Azure functions. Do not worry about this part: The website just pull dynamic data to show to the user.
+We already customized the project so that the data displayed in the dashboard are taken from a set of REST services based on Azure functions. Do not worry about this part: The website just pulls dynamic data to show to the user.
 
 Indeed, the goal is to make the website a Progressive Web Application. This is achieved by adding 
 - A web standard file which is the **Web app manifest**. The manifest will define the features of the app such as name, icon, splash screen, theme colors and so on.
@@ -256,7 +255,7 @@ We take care of all that in the following tasks.
 ### Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
 1. In the Windows Explorer, create a new local folder like *"C:\PWALab"*. It will be our working folder for the Contoso Dashboard website.
-2. In order to get the source code of the Contoso Dashboard customized website, go to [Windows AppConsult PWALab repository](https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/). Click on the **releases** tab and donwload the latest release.
+2. In order to get the source code of the Contoso Dashboard customized website, go to [Windows AppConsult PWALab repository](https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/). Click on the **releases** tab and download the latest release.
 3.  When ready, click on the downloaded file in your browser to open it.
 
 ![Downloaded file in Chrome](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/SourceCodeDownloaded.png)
@@ -275,7 +274,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 You are ready to work on the code!
 
 ### Task 2 - Create the Manifest
-The Web App Manifest is beeing defined by the W3C; The [specification](https://www.w3.org/TR/appmanifest/) is still in progress. Nevertheless, a good schema's description can be found at [http://json.schemastore.org/web-manifest](http://json.schemastore.org/web-manifest).
+The Web App Manifest is defined by the W3C; The [specification](https://www.w3.org/TR/appmanifest/) is still in progress. Nevertheless, a good schema's description can be found at [http://json.schemastore.org/web-manifest](http://json.schemastore.org/web-manifest).
 
 The manifest is a JSON-formatted file describing key information about the app. Here are the main elements:
 - **name** - Long name of the application.
@@ -283,15 +282,15 @@ The manifest is a JSON-formatted file describing key information about the app. 
 - **start_url** - Url requested for the main page when the app starts.
 - **description** - Purpose and description of the application.
 - **scope** - Navigation scope of the application. If the user navigates outside this 'scope', the web page will be opened in the Web browser outside the application. The scope value is a relative url like `/PWAApp/`.
-- **icons** - Array of different sized icons that will be used in the different OS's contexts. For exemple: App icon in the applications' list, App icon in the taskbar if any, App icon in the Store, etc.
+- **icons** - Array of different sized icons that will be used in the different OS's contexts. For example: App icon in the applications' list, App icon in the taskbar if any, App icon in the Store, etc.
 - **background_color** - Expected background of the application.
 - **theme_color** - Default theme color for the application.
 - **orientation** - Default orientation requested for the application.
-- **display** - Prefered display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
+- **display** - Preferred display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
 
 You can refer to [https://developer.mozilla.org/en-US/docs/Web/Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) for further details.
 
-Let's add a manifest to the Contose Dashboard website:
+Let's add a manifest to the Contoso Dashboard website:
 1. Within Visual Studio Code, in the Explorer panel (on the left), click on the **New File** button.
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/newfileButton.png)
@@ -342,7 +341,7 @@ In order to add the manifest to the Contoso Dashboard website, we just add a `<l
 <link rel="manifest" href="/manifest.json">
 ```
 
-As you noticed, in the previous task, we use 2 images for the icons. These images were already created and put for you at the website root.
+As you noticed, in the previous task, we use 2 images for the icons (Contoso96x96.png and Contoso192x192.png). These images were already created and put for you at the website root.
 
 ### Task 4 - Add a service worker
 As already mentioned at the beginning of the lab, the service worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker, it’s able to intercept all the requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
@@ -388,7 +387,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 <script src="js/sb-pwa.js"></script>
 ```
 
-That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. If you're using the previous instance of Chrome, make sure to uncheck the **Offline** option in the **Network** section. Move to the **Application** tab and you should see something like this:
+That’s it! If you want to test that the service worker has been installed properly, open the URL **http://127.0.0.1:5500** in Chrome and press F12 to enable the developer tools. Make sure to uncheck the **Offline** option in the **Network** section. Move to the **Application** tab, click on the **Service Workers** section, and you should see something like this:
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/serviceworkerinstalled.png)
 
@@ -397,11 +396,11 @@ The service worker has been properly installed and it’s up and running. We can
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/networkserviceworker.png)
 
 However, the current implementation of the service worker is not really useful. We're just forwarding all the incoming requests to the server, which is something the browser would do anyway.
-In the Exercise 2, we will bring useful functionnalities to the service worker by adding some offline capabilities.
+In the Exercise 2, we will bring useful functionalities to the service worker by adding some offline capabilities.
 
 ### Task 5 - Install the PWA
 
-With the App manifest and the Service Worker, the Contoso Dashboard website is now a full PWA. Do want to verify it? No problem.
+With the App manifest and the Service Worker, the Contoso Dashboard website is now a full PWA. Do you want to verify it? No problem.
 
 1.  Browse the website **http://127.0.0.1:5500/index.html**.
 2.  Press F12 to turn on the developer tools.
@@ -528,7 +527,7 @@ Let’s define a new function to cache these pages inside the service worker:
 6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
-9.	Notice how, despite you have visited only the main page of the website (**index.html**), also other pages have been cached:
+9.	Notice how, even though you have visited only the main page of the website (**index.html**), also other pages have been cached:
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/cacheall.png)
     
@@ -574,7 +573,7 @@ It's now time to test the code:
 
 1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. If you are still offline (with the developers tools), just switch online and refresh the page.
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page becausem without a valid connection, the browser will not automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page because without a valid connection, the browser will not automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and make sure to select the **Service Workers** tab. 
 6. Check the **Offline** option.
@@ -592,12 +591,12 @@ We can verify that this is indeed the case with the developer tools. Move to the
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/indexfromserviceworker.png)
 
-A way to solve this problem would be to update the service worker initialization code in order to register all the other files which are required to properly render the web application. However, woudln't be simpler if we just add all the incoming requests to the cache? This is what we're going to implement in the next task.
+A way to solve this problem would be to update the service worker initialization code in order to register all the other files which are required to properly render the web application. However, wouldn't be simpler if we just add all the incoming requests to the cache? This is what we're going to implement in the next task.
 
 ### Task 2 - Enable cache at request time
 In the previous task we have intercepted the **fetch** event to handle caching. However, we were focused only in reading from the cache. If the current request couldn't be satisfied because the Internet connection was missing, we tried to read it from the cache.
 
-However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's succesfull, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that were downloaded while the user browsed the web application.
+However, this event can be used also to write to the cache. This is what we're going to do in this task. Whenever the browser sends a request to the server and it's successful, we're going to save the response in the cache. This way, if the connection drops, we will be able to provide an offline experience not only for the pages we have cached in the beginning, but also for all the other resources that were downloaded while the user browsed the web application.
 
 1. Open the **sw.js** file in Visual Studio Code
 2. Look for the function which handles the **fetch** event we have created in task 1 and delete it.
@@ -675,7 +674,7 @@ The information displayed in these boxes is retrieved from a REST service expose
 
     By using the **fetch()** API we connect to the REST service, we download its content, we parse it as a JSON and we extract the total number of messages (which is stored in the **count** property). By using the jQuery syntax, we update the content of the box with id **messages** to display the returned value.
     
-3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL **http://127.0.0.1:5500** in the address bar and open it.
+3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, enter the URL **http://127.0.0.1:5500** in the address bar and open it.
 4. Press F12 to turn the developer tools and move to the **Application** tab.
 5. Expand the **Cache Storage** section in the left panel and click on the available cache, which name is **pwabuilder-offline**.
 6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
@@ -736,7 +735,7 @@ In case of web notifications, this is how a typical JSON payload looks like:
 
 ```json
 {
-  "body": "Did you just made a purchase using your credit card ending with 1234?",
+  "body": "Did you just make a purchase using your credit card ending with 1234?",
   "icon": "images/ccard.png",
   "vibrate": [200, 100, 200, 100, 200, 100, 400],
   "tag": "request",
@@ -820,7 +819,7 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
 
     ![Debug button on the left side](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/vscodedebug.png)
     
-5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button.
+5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button. Note: This leverages the [C# Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp).
   
     ![Play button for Debug](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/PlayButtonForDebug.png)
     
@@ -966,16 +965,20 @@ Now that we have verified that we have all the endpoints we need, we can impleme
     This snippet is made by different chained asynchronous methods. Let's analyze in the detail the workflow:
     
     a. Before working with the **pushManager** object, we need to be sure that the service worker has been registered and it's ready to work. As such, we wait for the **ready** object exposed by the service worker to be initialized. Then we invoke the **getSubscription()** method, which will return an object with a reference to the subscription registered by the browser. If this object is valid, we simply return it. The channel has already been registered and, as such, we don't need to register it again.
+    
     b. The next step is to check permission to send push notifications. We do this by calling the **Notification.requestPermission()** method we've already seen in the previous task. We get in return the information of the action taken by the user. If it's **granted**, it means we're good to go and we can continue requesting a new subscription. Otherwise, we need to handle the fact that the user won't be able to receive notifications. In our case, we simply log an error in the console.
+
     c. In case the subscription doesn't exist, instead, we need to request a new one. We achieve this goal by invoking the **subscribe()** method of the **pushManager** object, which requires a VAPID public key. As such, before calling the **subscribe()** method, we need to reach our Web API to request it. This is the purpose of the **getVAPIDKey()** function, which we'll see later in details.
+
     d. Once we have the key, we can call the **subscribe()** method exposed by the **pushManager** object passing two parameters:
     
-         - **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, not all the browsers support this scenario for security reasons. For example, not setting this property or setting it to **false** will result in an error if you're using Chrome.
-        - **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
+    * **userVisibleOnly**, which must be equal to **true**. This means that our application will use this subscription to display a visual element to the user (a notification). Theoretically, it could be set to false in case you would like to perform other kind of silent activites but, at the time of writing, not all the browsers support this scenario for security reasons. For example, not setting this property or setting it to **false** will result in an error if you're using Chrome.
+        
+     * **applicationServerKey**, which is the public VAPID key. However, it can't be sent as it is, but it must be converted to an array. This is why we pass it to a function called **urlBase64ToUint8Array()**. However, this method isn't built-in, but we need to declare it. We'll do it in the next step.
         
     e. If the new subscription is registered successfully, we need to store in it in our backend. As such, we engage again with our Web API, by sending the subscription object. We do this in the **postSubscription()** function, which will see in a moment.
     
-4. Now let's implement the various functions we have seen in the main snippet. Let's start bt yhe **getVAPIDKey()** one. Copy and paste the following snippet after the previous one:
+4. Now let's implement the various functions we have seen in the main snippet. Let's start with the **getVAPIDKey()** one. Copy and paste the following snippet after the previous one:
 
     ```javascript
     async function getVAPIDkey() {
@@ -1004,6 +1007,7 @@ Now that we have verified that we have all the endpoints we need, we can impleme
       }
     }
     ```
+    
     We perform a HTTP request to the **/api/push/channel** endpoint of our Web API. We use again the **fetch()** method but, this time, we pass another parameter because we need to specify additional options: we want to perform a POST request and, in the body, we need to include the JSON payload with the subscription data.
 
 6. In the end, we need to implement the **urlBase64ToUint8Array()** function, which is the helper that convers the public VAPID key into an array. Copy and paste the following snippet after the previous one: 
@@ -1043,7 +1047,7 @@ The implementation is now complete. We are ready to test it!
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/logpushalreadyexist.png)
     
-10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder *"Lab/Exercise 3/Start/Contoso.PushServer"* from the location where you have unzipped the lab content (it should be *"C:\PWALab"*).
+10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder *"c:/PWALab/Exercise3/01-Start/Contoso.PushServer"* from the location where you have unzipped the lab content (it should be *"C:\PWALab"*).
 11. Choose **File**, then **Open Windows PowerShell**.
 12. Type the following command:
     
@@ -1121,7 +1125,7 @@ However, as we have experienced at the end of Task 4, the **Send** button isn't 
     ```
 
     First we create a new instance of the **WebPushClient** class, which is provided by the Web Push library. Then we create a **VapidDetails** object, which contains all the information to authenticate against the notification service: a URL or a mail address of the owner plus the public and private VAPID keys we have previously generated in Task 2.
-    The next step is to create a **PushSubscription** object, passing as parameter the three information which identify the subscription: the URI of the channel and the two specific authentication keys assigned to it. We retrieve them from the **PushChannel** object which has been passed as parameter by the Contoso Backend application.
+    The next step is to create a **PushSubscription** object, passing as parameter the three pieces of information which identify the subscription: the URI of the channel and the two specific authentication keys assigned to it. We retrieve them from the **PushChannel** object which has been passed as parameter by the Contoso Backend application.
     In the end, we build a new **Notification** object, which is a C# representation of a web notification. This entity maps the following JSON:
     
     ```json
@@ -1165,6 +1169,7 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
       event.waitUntil(clients.openWindow('notifications.html?title='+title+'&message='+message));
     });
     ```
+    
     We subscribe to the **notificationclick** event, which is triggered whenever the user clicks on a notification which belongs to our web application. Then, thanks to the **notification** property of the **event** object, we get access to all the information included in the payload, such as the title and the message. We have access also to some methods to interact with the notification. In our case we invoke the **close()** event to make it disappear, since not all the platforms handle this scenario automatically.
     In the end, we call the **clients.openWindow()** method specifying a page of our web application which is dedicated to handle notifications (**notifications.html**) and adding, as query string parameters, the title and the message of the page. We wrap this method inside the **event.waitUntil()** function to make sure the service worker doesn't get terminated by the browser before we have completed our task.
     
