@@ -261,16 +261,16 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 ![Downloaded file in Chrome](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/SourceCodeDownloaded.png)
 
-4.  Open the zip file and extract all the content to your working folder *"C:\PWALab"* you've just created.
+4.  Open the zip file and extract all the content to your working folder `C:\PWALab` you've just created.
 
 5.  Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/OpenFolder.png)
 
-7.	Select the *"C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard"* folder.
+7.	Select the `C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard` folder.
 8.	In the explorer panel on the left of Visual Studio Code, select the **index.html** file.
 9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
-10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address **http://127.0.0.1:5500**.
+10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address `http://127.0.0.1:5500`.
 
 You are ready to work on the code!
 
@@ -287,7 +287,7 @@ The manifest is a JSON-formatted file describing key information about the app. 
 - **background_color** - Expected background of the application.
 - **theme_color** - Default theme color for the application.
 - **orientation** - Default orientation requested for the application.
-- **display** - Prefered display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
+- **display** - Preferred display mode of the app. Values can be `fullscreen`, `standalone`, `minimal-ui`, `browser`
 
 You can refer to [https://developer.mozilla.org/en-US/docs/Web/Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) for further details.
 
@@ -296,7 +296,7 @@ Let's add a manifest to the Contose Dashboard website:
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/newfileButton.png)
 
-2. Name it *"manifest.json"* ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ManifestJson.png)
+2. Name it `manifest.json` ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/ManifestJson.png)
 3. Copy/Paste the following json as the content: 
 
 ```json
@@ -353,7 +353,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/newfile.png)
 
-2. Name it **sw.js**
+2. Name it `sw.js`
 3. For the moment, we aren't going to implement any special caching strategy. We're just going to forward all the incoming requests to the server. Copy and paste the following snippet inside the **sw.js** file:
 
     ```javascript
@@ -364,7 +364,7 @@ Let’s start to add a basic service worker to our Contoso Dashboard website.
     
     We subscribe to the **fetch** event, which is triggered every time the browser performs a HTTP request against the server. Thanks to the **event.respondWith()** function we intercept the operation. This way, the browser won't try to handle it, but it will be up to us to do it. However, in this case we are behaving like the browser ; so we simply invoke the **fetch()** method passing, as parameter, the original request. This way, it will simply be forwarded to the server.
 
-4.	Now expand the **js** folder in the Explorer panel and press again the **New file** button. Name it **sb-pwa.js**. This is the file where we're going to implement all the logic to register the service worker.
+4.	Now expand the **js** folder in the Explorer panel and press again the **New file** button. Name it `sb-pwa.js`. This is the file where we're going to implement all the logic to register the service worker.
 5.	Copy and paste the following code snippet:
 
     ```javascript
@@ -397,13 +397,13 @@ The service worker has been properly installed and it’s up and running. We can
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/networkserviceworker.png)
 
 However, the current implementation of the service worker is not really useful. We're just forwarding all the incoming requests to the server, which is something the browser would do anyway.
-In the Exercise 2, we will bring useful functionnalities to the service worker by adding some offline capabilities.
+In the Exercise 2, we will bring useful functionalities to the service worker by adding some offline capabilities.
 
 ### Task 5 - Install the PWA
 
 With the App manifest and the Service Worker, the Contoso Dashboard website is now a full PWA. Do want to verify it? No problem.
 
-1.  Browse the website **http://127.0.0.1:5500/index.html**.
+1.  Browse the website `http://127.0.0.1:5500/index.html`.
 2.  Press F12 to turn on the developer tools.
 3.  Move to the **Application** tab.
 4.  Click on the **Manifest** section under **Application** in the left menu of the developer tools.
@@ -441,10 +441,10 @@ One of the key requirements to turn our Contoso Dashboard website into an applic
 The current web application doesn’t have any kind of offline capability. Since our website is running with a local server, it will continue to work even if we physically disconnect our computer from Internet. However, we can test this scenario using the developer’s tools included in Chrome.
 
 1.	Open Visual Studio Code and choose **Open folder**.
-2.	Select the folder *"Lab/Exercise2/Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file of the lab (it should be *"C:\PWALab"*)
-3.	Select the **index.html** file from the Explorer panel on the left
-4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code
-5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address **http://127.0.0.1:5500**. Notice that the website is loading properly, since the connection is active.
+2.	Select the folder `C:\PWALab\Lab\Exercise2\01-Start\Contoso.Dashboard`.
+3.	Select the **index.html** file from the Explorer panel on the left.
+4.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
+5.	Wait for the server to start and for the website to open inside Chrome. It will be available at the address `http://127.0.0.1:5500`. Notice that the website is loading properly, since the connection is active.
 6.	Now press F12 to turn on the developer tools.
 7.	Move to the **Network** tab.
 8.	Click on **Offline**
@@ -525,7 +525,7 @@ Let’s define a new function to cache these pages inside the service worker:
 
 4.	Now return to Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 5.	Move to the **Application** tab and press the **Unregister** button near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**
+6.  Open again Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is `http://127.0.0.1:5500`.
 7.	Press again F12 and open the developer tools. Move again to the **Application** tab.
 8.	Expand the **Cache** section: you should see a cache with the same name you have defined in the JavaScript code, which is **pwabuilder-offline**. On the right, you will see all the content that has been cached.
 9.	Notice how, despite you have visited only the main page of the website (**index.html**), also other pages have been cached:
@@ -574,7 +574,7 @@ It's now time to test the code:
 
 1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. If you are still offline (with the developers tools), just switch online and refresh the page.
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page becausem without a valid connection, the browser will not automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is `http://127.0.0.1:5500`. Please note that we have to browse for the **index.html** page becausem without a valid connection, the browser will not automatically redirect to this default page. So, the url is `http://127.0.0.1:5500/index.html`.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and make sure to select the **Service Workers** tab. 
 6. Check the **Offline** option.
@@ -639,7 +639,7 @@ Let's test the new behavior.
 
 1. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. 
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. To be sure that the website is reloaded, press **CTRL+R**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is `http://127.0.0.1:5500`. To be sure that the website is reloaded, press **CTRL+R**.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and expand the **Cache Storage** element in the left panel
 6. Click on the available cache, named **pwabuilder-offline**.
@@ -675,7 +675,7 @@ The information displayed in these boxes is retrieved from a REST service expose
 
     By using the **fetch()** API we connect to the REST service, we download its content, we parse it as a JSON and we extract the total number of messages (which is stored in the **count** property). By using the jQuery syntax, we update the content of the box with id **messages** to display the returned value.
     
-3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL **http://127.0.0.1:5500** in the address bar and open it.
+3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL `http://127.0.0.1:5500` in the address bar and open it.
 4. Press F12 to turn the developer tools and move to the **Application** tab.
 5. Expand the **Cache Storage** section in the left panel and click on the available cache, which name is **pwabuilder-offline**.
 6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
@@ -683,7 +683,7 @@ The information displayed in these boxes is retrieved from a REST service expose
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/messagesjson.png)
 
-8. You can test that the request is being succesfully cached by observing the different behavior when you're online or offline:
+8. You can test that the request is being successfully cached by observing the different behavior when you're online or offline:
 - If you're online, every time you refresh the page the number in the various boxes will change, since it's returned by the REST API
 - If you're offline, at every refresh of the page the number in the various boxes will stay the same, since it's returned by the local cache
 
@@ -716,7 +716,7 @@ As such, we can change the function which interacts with the REST API to leverag
     ```
     
     Before performing the fetch operation to retrieve the data from the REST service, we open the cache and we look if we have already previously cached the request. The main difference compared to the code we have written in the service worker is that, this time, we aren't generically handling all the requests, but only a specific one: the one which responds to the **/api/messages** endpoint of our REST service. If that's the case, we parse the JSON and we immediately display the value in the box in the page (the one identified by the **messages** id). Once we have performed the operation, the rest of the code is the same as before and it downloads a fresh copy of the data from the web service.
-4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL **http://127.0.0.1:5500** in the address bar and open it.
+4. Let's test the code now. Open Chrome, make sure it’s still open on the website. Otherwise, digit the URL `http://127.0.0.1:5500` in the address bar and open it.
 5. Refresh the home page a few times. You will notice that the last value returned by the REST service will be immediately displayed. Once the communication with the REST service is completed, the box will be updated to reflect the new value.
 
 If you want, you can complete the task by enabling this behavior also for the other 3 boxes.
@@ -728,7 +728,7 @@ In this exercise we're going to use the Push APIs and the Notification APIs to e
 - The Contoso Dashboard one, which is the web app we have already worked on in the previous exercises.
 - A backend, which will be used by the Contoso Dashboard to handle subscription channels. We're going to build a Web API with .NET Core, which will provide the various endpoints to store a new channel, send a push notification, etc.
 
-There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder *"Lab/Exercise3/01-Start/Contoso.PushServer"*.
+There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we won't build this application, but it's already included in the lab material, inside the folder `C:\PWALab\Lab\Exercise3\01-Start\Contoso.PushServer`.
 
 ### Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -750,7 +750,7 @@ In case of web notifications, this is how a typical JSON payload looks like:
 However, the browser isn't able to display push notifications on its own like, for example, Windows 10 can do when an application receives a toast notification. We have to listen for incoming notifications in our web application and use the information in the incoming JSON to visually render it.
 We're going to do this operation in the service worker since, as already explained, it's able to run also in background when the browser isn't running.
 
-1. Open Visual Studio Code. Choose **File -> Open folder** and select the folder *"Lab/Exercise3/01-Start/Contoso.Dashboard"* from the location where you have uncompressed the zip file at the beginning of the lab (it should be *"C:\PWALab"*).
+1. Open Visual Studio Code. Choose **File -> Open folder** and select the folder `C:\PWALab\Lab\Exercise3\01-Start\Contoso.Dashboard`.
 2. Select the **sw.js** file in the Explorer panel on the left.
 3. Add the following snippet at the end of the file:
 
@@ -772,7 +772,7 @@ We're going to do this operation in the service worker since, as already explain
 This is all the code we need to handle incoming push notifications. Chrome gives us the opportunity to test the implementation thanks to the developer tools.
 
 1. In case the web server isn't running, press the **Go live** button in the bottom task bar of Visual Studio Code
-2. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
+2. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL `http://127.0.0.1:5500` in the address bar.
 3. Press F12 to open the developer tools. If you are using a instance of the browser you already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 4. In the developer tools, click on **Application**, then choose **Service Workers**.
 5. Notice that, in the center, there's a **Push** field under the information about the service worker.
@@ -814,7 +814,7 @@ This will be our goal in the next tasks of this exercise.
 As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints implemented. 
 
 1. Open a new instance of Visual Studio Code.
-2. Choose **File -> Open Folder** and look for the folder *"Lab/Exercise3/01-Start/Contoso.WebAPI"* in the location where you have unzipped the lab material (it should be *"C:\PWALab"*).
+2. Choose **File -> Open Folder** and look for the folder `C:\PWALab\Lab\Exercise3\01-Start\Contoso.WebAPI`.
 3. In the Explorer panel on the left you will find a file called **PushController.cs** under the **Controllers** folder. This class will contain all our endpoints.
 4. If you want to launch and test the Web API, you can click on the fourth icon in the left panel, as highlighted in the image below:
 
@@ -824,7 +824,7 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
   
     ![Play button for Debug](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/PlayButtonForDebug.png)
     
-6. The Web API will be available at the URL **http://localhost:5000**. We will reuse this URL later when we're going to implement subscriptions in the Contoso Dashboard website.
+6. The Web API will be available at the URL `http://localhost:5000`. We will reuse this URL later when we're going to implement subscriptions in the Contoso Dashboard website.
 
 ### Task 3 - Configuring the authentication
 In order to authenticate your backend against the push notification service you need to request a set of VAPID keys. There are multiple ways to obtain them. For our lab we're going to use an online tool.
@@ -865,7 +865,7 @@ This is the workflow we need to implement in this task:
 
 1. The web application retrieves the current subscription.
 2. If there isn't an already existing subscription, it requests a new one.
-3. If the request is successfull, the subscription is sent to the backend, so that it can be stored in the database.
+3. If the request is successful, the subscription is sent to the backend, so that it can be stored in the database.
 
 To support this workflow our Web API needs to expose two endpoints:
 
@@ -1030,9 +1030,9 @@ The implementation is now complete. We are ready to test it!
 
 1. Open Visual Studio Code on the Web API instance.
 2. Move to the Debug section of Visual Studio Code and choose **.NET Core Launch (web)**.
-3. After a few seconds, the Web API will start and it will listen to the URL **http://localhost:5000**.
+3. After a few seconds, the Web API will start and it will listen to the URL `http://localhost:5000`.
 4. Now go back to the Visual Studio Code instance with the Contoso Dashboard web application. If it isn't already running, press the **Go live** button in the taskbar to start the web server.
-5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
+5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL `http://127.0.0.1:5500` in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
 7. Move to the **Console** section of the developer tools.
 8. If you did everything correctly, you should see in the log the following two messages:
@@ -1043,7 +1043,7 @@ The implementation is now complete. We are ready to test it!
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/logpushalreadyexist.png)
     
-10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder *"Lab/Exercise 3/Start/Contoso.PushServer"* from the location where you have unzipped the lab content (it should be *"C:\PWALab"*).
+10. Now we can check if the subscription has been properly stored in the database. Open in File Explorer the folder `C:\PWALab\Lab\Exercise3\01-Start\Contoso.PushServer`.
 11. Choose **File**, then **Open Windows PowerShell**.
 12. Type the following command:
     
@@ -1051,14 +1051,14 @@ The implementation is now complete. We are ready to test it!
     dotnet run
     ```
     
-13. The command will build and run the Contoso Backend website, which will be available at the URL **http://localhost:1983**
+13. The command will build and run the Contoso Backend website, which will be available at the URL `http://localhost:1983`
 14. Open a new instance of Chrome and type this URL in the address bar.
 15. In the page you should see the subscription you have just registered with its unique channel URI. The website is communicating with the **/api/channel** endpoint exposed by our Web API, this time with a GET instead of a POST. In this case, the endpoint is simply returning the list of all the subscriptions stored in the database.
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/googlechannel.png)
     
 16. Notice that the URL of the channel belongs to the domain **fcm.googleapis.com**. This is because we have opened the Contoso Dashboard website in Chrome and, as such, we're automatically using the notification service offered by Google.
-17. Now open the Edge browser and type in the address bar the URL of the Contoso Dashboard, which is **http://127.0.0.1:5500**. Wait for the website to load.
+17. Now open the Edge browser and type in the address bar the URL of the Contoso Dashboard, which is `http://127.0.0.1:5500`. Wait for the website to load.
 18. Now go back to the Chrome instance with the Contoso backend and refresh the page. You will see a new channel appearing in the list.
 
     ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/edgechannel.png)
@@ -1135,11 +1135,11 @@ However, as we have experienced at the end of Task 4, the **Send** button isn't 
     
 That's it. Now that we have our new endpoint, the **Send** button in the Contoso Backend web application will work as expected. Let's test this!
 
-1. Open the Visual Studio Code instance on the Web API
-2. Move to the Debug section of the editor
-3. Choose **.NET Core Launch (web)**
-4. Wait for the project to compile and run. As before, the Web API will listen to the URL **http://localhost:5000**
-5. If you're coming from the previous task, the Contoso Backend website should already be up & running. Otherwise, open in File Explorer the *"Lab/Exercise 3/Start/Contoso.PushServer"* folder from the location where you have unzipped the lab content (it should be *"C:\PWALab"*). Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
+1. Open the Visual Studio Code instance on the Web API.
+2. Move to the Debug section of the editor.
+3. Choose **.NET Core Launch (web)**.
+4. Wait for the project to compile and run. As before, the Web API will listen to the URL `http://localhost:5000`.
+5. If you're coming from the previous task, the Contoso Backend website should already be up & running. Otherwise, open in File Explorer the `C:\PWALab\Lab\Exercise3/01-Start\Contoso.PushServer` folder. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar `http://localhost:1983`.
 6. Once the website has been loaded, press the **Send** button near one of the channels you have previously subscribed.
 7. You should see a notification appearing in the lower left corner of the screen and, after a few seconds, it should move to the Action Center in Windows 10.
 8. If you want to test that service workers are indeed able to work also in background, make sure that you don't have any instance of Edge running, then hit the **Send** button near the subscription you have registered in Edge in the previous task (it's the one with the channel URI that starts with https://db5p.notify.windows.com). 
@@ -1169,9 +1169,9 @@ As such, it's up to you to handle it, thanks to another event exposed by the ser
     In the end, we call the **clients.openWindow()** method specifying a page of our web application which is dedicated to handle notifications (**notifications.html**) and adding, as query string parameters, the title and the message of the page. We wrap this method inside the **event.waitUntil()** function to make sure the service worker doesn't get terminated by the browser before we have completed our task.
     
 4. Now we're ready to test our work. In case the web server isn't still running from the previous tasks, press the **Go Live** button in the bottom bar of Visual Studio Code.
-5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL **http://127.0.0.1:5500** in the address bar.
+5. Wait for Chrome to open on the website. If it doesn't happen, you can manually open Chrome and type the URL `http://127.0.0.1:5500` in the address bar.
 6. Press F12 to open the developer tools. If you are using a instance of the browser you have already used for previous exercises, move to the **Application** tab, choose **Service Workers** from the left panel and press **Unregister** near the service worker. Then close Chrome and reopen it on the same website. This step will make sure that the updated service worker will be deployed and it will replace the old one. 
-7. Now open the Contoso Backend website. If it's still not running from the previous task, open in File Explorer the *"Lab/Exercise 3/Start/Contoso.PushServer"* folder from the location where you have unzipped the lab content (it should be *"C:\PWALab"*). Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar **http://localhost:1983**.
+7. Now open the Contoso Backend website. If it's still not running from the previous task, open in File Explorer the `C:\PWALab\Lab\Exercise3\01-Start\Contoso.PushServer` folder. Choose **File -> Open Windows PowerShell**. Type **dotnet run** and wait for the web server to start. Open Chrome and type in the address bar `http://localhost:1983`.
 8. Once the website has been loaded, press the **Send** button near the last channel in the list. You should see multiple ones at this point of the exercise. The reason is that, every time you unregister a service worker and register an updated one, a new subscription is created.
 9. A notification will be displayed in the lower left corner of your screen. Click on it.
 10. Notice how a new instance of the Contoso Dashboard website will be opened on the Notifications page, which will display the title and the message of the notification you have just received. This page, in fact, takes care of dinamically extracting the title and the message from the query string parameter. If you look at the URL of the page, it should look something like **http://127.0.0.1:5500/notifications.html?title=Test%20notification&message=Hey,%20you%20have%20a%20notification!**
