@@ -57,7 +57,7 @@ The development team is now looking to further enhance the website and to provid
 The Contoso Dashboard website is built using [Bootstrap](https://getbootstrap.com/), the popular web framework to build responsive web applications. The website is based on a customization of the free [SB Admin template](https://startbootstrap.com/template-overviews/sb-admin/). It doesn't have a server-side component. The whole project runs client side and it's based only on HTML, CSS and JavaScript.
 The information displayed in the dashboard are taken from a set of REST services, which are deployed on Azure using the Azure Functions platform. However, for the purpose of this lab, you will just consume these services and you don't have to worry how they have been implemented.
 
-___ 
+=== 
 
 ### Key concepts that will be used during the lab
 
@@ -238,7 +238,7 @@ The default browser of the computer will be opened directly on the website which
 
 Lastly, we're going to use [Google Chrome](https://www.google.com/chrome/) as a web browser for testing. The built-in developer tools, in fact, supports many useful features for our scenario, like displaying the registered service workers, exploring the cache, simulating the lack of Internet connection, etc.
 
-___ 
+=== 
 
 ## Exercise 1 - Convert the website into a Progressive Web App
 
@@ -254,7 +254,7 @@ Indeed, the goal is to make the website a Progressive Web Application. This is a
 
 We take care of all that in the following tasks.
 
-___ 
+=== 
 
 ### Exercise 1 Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
@@ -277,7 +277,7 @@ Let's first be sure we can run and debug the Contoso Dashboard website locally.
 
 You are ready to work on the code!
 
-___ 
+=== 
 
 ### Exercise 1 Task 2 - Create the Manifest
 The Web App Manifest is beeing defined by the W3C; The [specification](https://www.w3.org/TR/appmanifest/) is still in progress. Nevertheless, a good schema description can be found at [http://json.schemastore.org/web-manifest](http://json.schemastore.org/web-manifest).
@@ -338,7 +338,7 @@ Some explanations:
 - The start url is the website default page.
 - The display named 'Standalone' makes the app's look and feel the same as a modern app from the Store.
 
-___ 
+=== 
 
 ### Exercise 1 Task 3 - Add the manifest to the website
 In order to add the manifest to the Contoso Dashboard website, we just add a `<link>` element in the default page. Here are the steps:
@@ -351,7 +351,7 @@ In order to add the manifest to the Contoso Dashboard website, we just add a `<l
 
 As you noticed, in the previous task, we reference 2 images for the icons. These images were created and put at the website root for you, so there is no need to create them now.
 
-___ 
+=== 
 
 ### Exercise 1 Task 4 - Add a service worker
 As already mentioned at the beginning of the lab, the service worker is a component that acts as a middle man between the browser and the server. When a website registers a service worker, it’s able to intercept all the requests, so that it can redirect them to the most appropriate source: Internet or the browser’s cache.
@@ -408,7 +408,7 @@ The service worker has been properly installed and it’s up and running. We can
 However, the current implementation of the service worker is not really useful. We're just forwarding all the incoming requests to the server, which is something the browser would do anyway.
 In the Exercise 2, we will bring useful functionalities to the service worker by adding some offline capabilities.
 
-___ 
+=== 
 
 ### Exercise 1 Task 5 - Install the PWA
 
@@ -449,7 +449,7 @@ Please note that, at the moment of writing, to uninstall the app, you have to la
 
 We have now a first version of the Contoso Dashboard PWA. In the following two exercises, we will enhance it to provide offline capabilities and enable web push notifications.
 
-___ 
+=== 
 
 ## Exercise 2 - Add offline capabilities
 One of the key requirements to turn our Contoso Dashboard website into an application is adding offline capabilities, so that some of the available resources can be used also when the user doesn’t have an Internet connection or when he might be in a situation where the connection drops frequently (e.g. he’s in an area with a weak cellular connection).
@@ -468,7 +468,7 @@ The current web application doesn’t have any kind of offline capability. Since
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/nointernet.png)
 
-___ 
+=== 
 
 ### Exercise 2 Task 1 - Enable caching at install time
 A common scenario for a Progressive Web App is to cache, immediately when the service worker is installed for the first time, a set of pages that could be commonly visited by the user or which content could be leveraged also offline.
@@ -612,7 +612,7 @@ We can verify that this is indeed the case using the developer tools. Move to th
 
 A way to solve this problem would be to update the service worker initialization code in order to register all the other files which are required to properly render the web application. However, woudln't it be simpler, if we just add all the incoming requests to the cache? This is what we're going to implement in the next task.
 
-___ 
+=== 
 
 ### Exercise 2 Task 2 - Enable cache at request time
 In the previous task we have intercepted the **fetch** event to handle caching. However, we were focused only in reading from the cache. If the current request couldn't be satisfied because the Internet connection was missing, we tried to read it from the cache.
@@ -671,7 +671,7 @@ Let's test the new behavior.
 9. Check **Offline** at the top of the panel.
 10. Now reload the page. You will notice that, this time, the offline page will look exactly like the online one, without errors or noticeable issues. The reason is that, this time, also all the required CSS and JavaScript files have been cached and not just the HTML ones.
 
-___ 
+=== 
 
 ### Exercise 2 Task 3 - Cache specific requests (optional task)
 
@@ -743,7 +743,7 @@ As such, we can change the function which interacts with the REST API to leverag
 
 If you want, you can complete the task by enabling this behavior for the other 3 boxes as well.
 
-___ 
+=== 
 
 ## Exercise 3 - Add push notifications
 
@@ -754,7 +754,7 @@ In this exercise we're going to use the Push APIs and the Notification APIs to e
 
 There's a third component, which is a dedicated web app for testing the push notification scenario called **Contoso Backend**. It lists all the registered channels and it provides a button to send a notification to each of them. However, we will not need to build this application, as it is already included in the lab material. You can find it inside the folder `C:\PWALab\Lab\Exercise3\01-Start\Contoso.PushServer`.
 
-___ 
+=== 
 
 ### Exercise 3 Task 1 - Subscribe to receive push notifications
 Notifications are represented by a JSON payload, which is included in the body of the HTTP request that the backend sends to the notification service.
@@ -836,7 +836,7 @@ The event we have registered in the service worker is working as expected. Howev
 
 This will be our goal in the next tasks of this exercise.
 
-___ 
+=== 
 
 ### Exercise 3 Task 2 - Setting up the backend
 As already anticipated, we're going to build a .NET Core Web API as our backend. We won't start from scratch building the API, but we're going to use a base template with already some settings pre configured and some endpoints implemented. 
@@ -886,7 +886,7 @@ public class PushController : ControllerBase
 }
 ```
 
-___ 
+=== 
 
 ### Exercise 3 Task 4 - Register a new subscription
 As already mentioned, the service worker is the core class which offers the APIs to handle push notifications, through an object called **pushManager**. Thanks to it, we can get a reference to the current subscription and, if there isn't one, request a new channel.
@@ -1102,7 +1102,7 @@ The implementation is now complete. We are ready to test it!
 
 Near every subscription you will see a button called **Send**. However, if you press it, nothing will happen. We need to implement a new endpoint in the Web API to send a push notification first. This is the goal of the next task.
 
-___ 
+=== 
 
 ### Exercise 3 Task 5 - Sending a push notification 
 
@@ -1182,7 +1182,7 @@ That's it. Now that we have our new endpoint, the **Send** button in the Contoso
 8. If you want to test that service workers are indeed able to work also in background, make sure that you don't have any instance of Edge running, then hit the **Send** button near the subscription you have registered in Edge in the previous task (it's the one with the channel URI that starts with https://db5p.notify.windows.com). 
 9. Notice that you will receive the notification, despite the browser not being open.
 
-___ 
+=== 
 
 ###  Exercise 3 Task 6 - Handling the activation from a push notification
 Our current solution is working great, but it has a serious limitation: if you try to click on a notification, you will notice that nothing will happen.
