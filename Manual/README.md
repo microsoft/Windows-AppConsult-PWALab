@@ -592,8 +592,7 @@ It's now time to test the code:
 
 1. Open Chrome, make sure the Contoso Dashboard website is still open and that the developers tools are turned on. If you are still offline (with the developers tools), just switch online and refresh the page.
 2. Move to the **Application** tab and press **Unregister** near the service worker. Then close Chrome. This step will make sure that the updated service worker will be deployed and it will replace the old one.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is `http://127.0.0.1:5500`. Please note that we have to browse for the **index.html** page becausem without a valid connection, the browser will not automatically redirect to this default page. So, the url is `http://127.0.0.1:5500/index.html`.
-3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is **http://127.0.0.1:5500**. Please note that we have to browse for the **index.html** page because without a valid connection, the browser will not automatically redirect to this default page. So, the url is **http://127.0.0.1:5500/index.html**.
+3. Open again the Chrome on the Contoso Dashboard website. In case you need it, remember that the URL of the local server is `http://127.0.0.1:5500/index.html`. Please note that we have to browse for the **index.html** page because without a valid connection, the browser will not automatically redirect to this default page.
 4. Press F12 and open the developer tools.
 5. Move to the **Applications** tab and make sure to select the **Service Workers** tab. 
 6. Check the **Offline** option.
@@ -699,7 +698,6 @@ The information displayed in these boxes is retrieved from a REST service expose
     By using the **fetch()** API we connect to the REST service, we download its content, we parse it as a JSON and we extract the total number of messages (which is stored in the **count** property). By using the jQuery syntax, we update the content of the box with id **messages** to display the returned value.
     
 3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, digit the URL `http://127.0.0.1:5500` in the address bar and open it.
-3. Open Chrome, make sure it’s still open on the website and that the developers tools are turned on. Otherwise, enter the URL **http://127.0.0.1:5500** in the address bar and open it.
 4. Press F12 to turn the developer tools and move to the **Application** tab.
 5. Expand the **Cache Storage** section in the left panel and click on the available cache, which name is **pwabuilder-offline**.
 6. Scroll the list of cached resources and notice how, other than the standard web resources like HTML pages and CSS files, you will see the various calls made to the REST APIs to retrieve the information displayed in the boxes.
