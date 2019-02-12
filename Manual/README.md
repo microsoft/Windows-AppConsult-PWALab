@@ -258,22 +258,21 @@ We take care of all that in the following tasks.
 
 ### Exercise 1 Task 1 - Setup the Contoso Dashboard website locally
 Let's first be sure we can run and debug the Contoso Dashboard website locally.
-1. In the Windows Explorer, create a new local folder like `C:\PWALab`. It will be our working folder for the Contoso Dashboard website.
-2. In order to get the source code of the Contoso Dashboard customized website, go to [Windows AppConsult PWALab repository](https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/). Click on the **releases** tab and download the latest release.
-3.  When ready, click on the downloaded file in your browser to open it.
+1. In order to get the source code of the Contoso Dashboard customized website, go to `https://aka.ms/PWALab-Content`. This link directs you to the latest release of the [Windows AppConsult PWALab repository](https://github.com/Microsoft/Windows-AppConsult-PWALab/tree/master/)
+2.  When ready, click on the downloaded file in your browser to open it.
 
 ![Downloaded file in Chrome](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/SourceCodeDownloaded.png)
 
-4.  Open the zip file and extract all the content to your working folder `C:\PWALab` you've just created.
+3.  Open the zip file and extract all the content to `C:\`. It will create a folder named `C:\PWALab`.
 
-5.  Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
+4.  Open Visual Studio Code and use the **File** menu / choose **Open folder...**.
 
 ![](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/OpenFolder.png)
 
-7.	Select the `C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard` folder.
-8.	In the explorer panel on the left of Visual Studio Code, select the **index.html** file.
-9.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
-10.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address `http://127.0.0.1:5500`.
+5.	Select the `C:\PWALab\Lab\Exercise1\01-Start\Contoso.Dashboard` folder.
+6.	In the explorer panel on the left of Visual Studio Code, select the **index.html** file.
+7.	Press the **Go live** button in the bottom taskbar of Visual Studio Code.
+8.  The server will start and the default browser will display the Contoso Dashboard website. It will be available at the address `http://127.0.0.1:5500`.
 
 You are ready to work on the code!
 
