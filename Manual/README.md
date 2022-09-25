@@ -847,7 +847,7 @@ As already anticipated, we're going to build a .NET Core Web API as our backend.
 
     ![Debug button on the left side](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/vscodedebug.png)
     
-5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button. Note: This leverages the [C# Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp).
+5. In the **Debug** dropdown make sure to choose **.NET Core Launch (web)** and press the Play button. Note: This leverages the [C# Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp).
   
     ![Play button for Debug](https://github.com/Microsoft/Windows-AppConsult-PWALab/raw/master/Manual/Images/PlayButtonForDebug.png)
     
